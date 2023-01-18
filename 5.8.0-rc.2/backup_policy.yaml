@@ -3,7 +3,7 @@ version: "0.3.10"
 
 security:
   attestation:
-    tolerate: [debug-mode, outdated-tcb]
+    tolerate: [debug-mode, outdated-tcb, software-hardening-needed, insecure-configuration, insecure-igpu]
 
 services:
   - name: register
