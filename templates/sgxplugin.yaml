@@ -1,10 +1,10 @@
 apiVersion: base.scone.cloud/v1beta1
-kind: LAS
+kind: SGXPlugin
 metadata:
-  name: las
+  name: sgxplugin
 spec:
   autoUpdate: true
-  image: "registry.scontain.com/scone.cloud/las:no-epid-production-5.8.0-rc.2"
+  image: registry.scontain.com/scone.cloud/sgx-plugin:${VERSION}
   imagePullSecrets:
    - name: scone-operator-pull
   imagePullPolicy: Always

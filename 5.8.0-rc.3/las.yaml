@@ -4,7 +4,7 @@ metadata:
   name: las
 spec:
   autoUpdate: true
-  image: "registry.scontain.com/scone.cloud/las:no-epid-production-5.8.0-rc.2"
+  image: "registry.scontain.com/scone.cloud/las:no-epid-production-5.8.0-rc.3"
   imagePullSecrets:
    - name: scone-operator-pull
   imagePullPolicy: Always

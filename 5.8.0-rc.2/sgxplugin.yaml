@@ -4,7 +4,7 @@ metadata:
   name: sgxplugin
 spec:
   autoUpdate: true
-  image: registry.scontain.com/scone.cloud/sgx-plugin:5.8.0-rc.1
+  image: registry.scontain.com/scone.cloud/sgx-plugin:5.8.0-rc.2
   imagePullSecrets:
    - name: scone-operator-pull
   imagePullPolicy: Always
