@@ -1,0 +1,242 @@
+name: 
+version: "0.3.10"
+
+security:
+  attestation:
+    tolerate: [debug-mode, outdated-tcb, software-hardening-needed, insecure-configuration, insecure-igpu]
+
+services:
+  - name: register
+    image_name: cli
+    # optional: 
+    #
+    attestation:
+      mrenclave:
+        - 
+    command: "scone cas register-backup @@3"
+    environment:
+      SCONE_MODE: hw
+      SCONE_LOG: error
+      SCONE_CLI_CONFIG: /etc/owner-identity.json
+      \@\@SCONE_LAS_ADDR: ""
+    pwd: /
+
+images:
+  - name: cli
+    injection_files:
+      - path: /etc/owner-identity.json
+        content: |
+
+apiVersion: services.scone.cloud/v1beta1
+kind: CAS
+metadata:
+  name: 
+  namespace: 
+spec:
+  image: 
+  imagePullSecrets:
+    - name: sconeapps
+  service:
+    type: NodePort
+  imagePullPolicy: Always
+  persistence:
+    enabled: true
+  databaseSnapshots:
+    enabled: true
+    persistence:
+      enabled: true
+  podAnnotations:
+    sconeapps/inject-pull-secret:  "true"
+  backup-controller:
+    enabled: false
+apiVersion: services.scone.cloud/v1beta1
+kind: CAS
+metadata:
+  name: ""
+  namespace: ""
+spec:
+  image: ""
+  imagePullSecrets:
+    - name: sconeapps
+  service:
+    type: NodePort
+  imagePullPolicy: Always
+  persistence:
+    enabled: true
+  databaseSnapshots:
+    enabled: true
+    persistence:
+      enabled: true
+  podAnnotations:
+    sconeapps/inject-pull-secret:  "true"
+  backup-controller:
+    enabled: true
+    session: "/register"
+    image: "/backup-controller:"
+  livenessProbe:
+    enabled: true
+#    failureThreshold: 5
+#    periodSeconds: 60
+#    timeoutSeconds: 60
+#    initialDelaySeconds: 30
+  startupProbe:
+     enabled: true
+#    failureThreshold: 5
+#    periodSeconds: 60
+#    timeoutSeconds: 60
+#    initialDelaySeconds: 30
+  attestedCLIProbes: false
+  networkPolicy:
+    enabled: false
+apiVersion: base.scone.cloud/v1beta1
+kind: LAS
+metadata:
+  name: las
+spec:
+  autoUpdate: true
+  image: "registry.scontain.com/scone.cloud/las:no-epid-production-"
+  imagePullSecrets:
+   - name: scone-operator-pull
+  imagePullPolicy: Always
+  namespace: scone-system
+  podAnnotations:
+    scone-operator/inject-pull-secret:  "true"
+
+apiVersion: images.banzaicloud.io/v1alpha1
+kind: ImagePullSecret
+metadata:
+  name: scone-operator-pull
+spec:
+  registry:
+    credentials:
+      - name:  scone-operator-pull
+        namespace: scone-system
+  target:
+    namespaces:
+      annotations:
+        - matchAnnotations:
+            scone-operator/inject-pull-secret:  "true"
+    namespacesWithPods:
+      annotations:
+        - matchAnnotations:
+            scone-operator/inject-pull-secret:  "true"
+    secret:
+      name: scone-operator-pull
+
+---
+
+apiVersion: images.banzaicloud.io/v1alpha1
+kind: ImagePullSecret
+metadata:
+  name: sconeapps
+spec:
+  registry:
+    credentials:
+      - name:  sconeapps
+        namespace: scone-system
+  target:
+    namespaces:
+      annotations:
+        - matchAnnotations:
+            sconeapps/inject-pull-secret:  "true"
+    namespacesWithPods:
+      annotations:
+        - matchAnnotations:
+            sconeapps/inject-pull-secret:  "true"
+    secret:
+      name: sconeapps
+
+apiVersion: base.scone.cloud/v1beta1
+kind: SGXPlugin
+metadata:
+  name: sgxplugin
+spec:
+  autoUpdate: true
+  image: registry.scontain.com/scone.cloud/sgx-plugin:
+  imagePullSecrets:
+   - name: scone-operator-pull
+  imagePullPolicy: Always
+  namespace: scone-system
+  podAnnotations:
+    scone-operator/inject-pull-secret:  "true"
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: vault-verifier
+spec:
+  imagePullSecrets:
+  - name: sconeapps
+  restartPolicy: Never
+  containers:
+  - image: 
+    name: vault-verifier
+    command:
+    - bash
+    - -c
+    args:
+      - "vault-statement-verifier -s /tmp/statement && echo \"Successfully verified statement\" || echo \"Statement could not be decrypted with the provided key\" "
+    resources:
+      limits:
+        sgx.intel.com/enclave: "1"
+    env:
+    - name: SCONE_CAS_ADDR
+      value: ""
+    - name: SCONE_LAS_ADDR
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: status.hostIP
+    - name: OWNER_ID
+      value: ""
+    - name: SCONE_CONFIG_ID
+      value: "owner-verify-$(OWNER_ID)/dev"
+    volumeMounts:
+      - name: statement-secret
+        mountPath: /tmp
+  volumes:
+  - name: statement-secret
+    secret:
+      secretName: verifier-statement
+apiVersion: services.scone.cloud/v1beta1
+kind: Vault
+metadata:
+  name: ""
+  namespace: ""
+spec:
+  server:
+    dev:
+      enabled: false
+    dataStorage:
+      enabled: false
+    image:
+      repository: ""
+      tag: ""
+      pullPolicy: Always
+    postStart:
+    - /bin/bash
+    - -c
+    - "/usr/local/bin/provision-vault.sh && /usr/local/bin/bootstrap-vault.sh"
+    resources:
+      limits:
+        sgx.intel.com/enclave: "1"
+        memory: "12G"
+      requests:
+        memory: "10G"
+    extraEnvironmentVars:
+      SCONE_HEAP: "8G"
+      SCONE_CAS_ADDR: ""
+      SCONE_LAS_ADDR: "$(HOST_IP)"
+      VAULT_ADDR: "https://localhost:8200"
+      OWNER_ID: ""
+      SCONE_CONFIG_ID: "vault-$(OWNER_ID)/dev"
+      VAULTINIT_AUTO_PROVISIONING_CONFIG_ID: "vault-init-auto-$(OWNER_ID)/dev"
+      VAULTINIT_REGISTER_CONFIG_ID: "vault-init-parent-$(OWNER_ID)/dev"
+      SCONE_VERSION: "1"
+    readinessProbe:
+      enabled: false
+  injector:
+    enabled: false
+  global:
+    imagePullSecrets:
+      - name: sconeapps
