@@ -1,0 +1,42 @@
+apiVersion: services.scone.cloud/v1beta1
+kind: Vault
+metadata:
+  name: ""
+  namespace: ""
+spec:
+  server:
+    dev:
+      enabled: false
+    dataStorage:
+      enabled: false
+    image:
+      repository: ""
+      tag: ""
+      pullPolicy: Always
+    postStart:
+    - /bin/bash
+    - -c
+    - "/usr/local/bin/provision-vault.sh && /usr/local/bin/bootstrap-vault.sh"
+    resources:
+      limits:
+        sgx.intel.com/enclave: "1"
+        memory: "12G"
+      requests:
+        memory: "10G"
+    extraEnvironmentVars:
+      SCONE_HEAP: "8G"
+      SCONE_CAS_ADDR: ""
+      SCONE_LAS_ADDR: "$(HOST_IP)"
+      VAULT_ADDR: "https://localhost:8200"
+      OWNER_ID: ""
+      SCONE_CONFIG_ID: "vault-$(OWNER_ID)/dev"
+      VAULTINIT_AUTO_PROVISIONING_CONFIG_ID: "vault-init-auto-$(OWNER_ID)/dev"
+      VAULTINIT_REGISTER_CONFIG_ID: "vault-init-parent-$(OWNER_ID)/dev"
+      SCONE_VERSION: "1"
+    readinessProbe:
+      enabled: false
+  injector:
+    enabled: false
+  global:
+    imagePullSecrets:
+      - name: sconeapps

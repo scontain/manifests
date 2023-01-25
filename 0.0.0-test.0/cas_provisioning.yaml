@@ -1,0 +1,22 @@
+apiVersion: services.scone.cloud/v1beta1
+kind: CAS
+metadata:
+  name: 
+  namespace: 
+spec:
+  image: 
+  imagePullSecrets:
+    - name: sconeapps
+  service:
+    type: NodePort
+  imagePullPolicy: Always
+  persistence:
+    enabled: true
+  databaseSnapshots:
+    enabled: true
+    persistence:
+      enabled: true
+  podAnnotations:
+    sconeapps/inject-pull-secret:  "true"
+  backup-controller:
+    enabled: false
