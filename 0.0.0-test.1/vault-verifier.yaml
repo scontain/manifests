@@ -7,7 +7,7 @@ spec:
   - name: sconeapps
   restartPolicy: Never
   containers:
-  - image: 
+  - image: $VAULT_IMAGE
     name: vault-verifier
     command:
     - bash
@@ -19,14 +19,14 @@ spec:
         sgx.intel.com/enclave: "1"
     env:
     - name: SCONE_CAS_ADDR
-      value: ""
+      value: "$SCONE_CAS_ADDR"
     - name: SCONE_LAS_ADDR
       valueFrom:
         fieldRef:
           apiVersion: v1
           fieldPath: status.hostIP
     - name: OWNER_ID
-      value: ""
+      value: "$OWNER_ID"
     - name: SCONE_CONFIG_ID
       value: "owner-verify-$(OWNER_ID)/dev"
     volumeMounts:

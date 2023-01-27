@@ -1,10 +1,10 @@
 apiVersion: services.scone.cloud/v1beta1
 kind: CAS
 metadata:
-  name: ""
-  namespace: ""
+  name: "${NAME}"
+  namespace: "${NAMESPACE}"
 spec:
-  image: ""
+  image: "${IMAGE}"
   imagePullSecrets:
     - name: sconeapps
   service:
@@ -20,8 +20,8 @@ spec:
     sconeapps/inject-pull-secret:  "true"
   backup-controller:
     enabled: true
-    session: "/register"
-    image: "/backup-controller:"
+    session: "${POLICY_NAME}/register"
+    image: "${IMAGE_REPO}/backup-controller:"
   livenessProbe:
     enabled: true
 #    failureThreshold: 5

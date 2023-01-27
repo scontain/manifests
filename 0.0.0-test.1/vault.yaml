@@ -1,8 +1,8 @@
 apiVersion: services.scone.cloud/v1beta1
 kind: Vault
 metadata:
-  name: ""
-  namespace: ""
+  name: "$VAULT_NAME"
+  namespace: "$NAMESPACE"
 spec:
   server:
     dev:
@@ -10,8 +10,8 @@ spec:
     dataStorage:
       enabled: false
     image:
-      repository: ""
-      tag: ""
+      repository: "$VAULT_IMAGE_REPO"
+      tag: "$VAULT_IMAGE_TAG"
       pullPolicy: Always
     postStart:
     - /bin/bash
@@ -25,10 +25,10 @@ spec:
         memory: "10G"
     extraEnvironmentVars:
       SCONE_HEAP: "8G"
-      SCONE_CAS_ADDR: ""
+      SCONE_CAS_ADDR: "$SCONE_CAS_ADDR"
       SCONE_LAS_ADDR: "$(HOST_IP)"
       VAULT_ADDR: "https://localhost:8200"
-      OWNER_ID: ""
+      OWNER_ID: "$OWNER_ID"
       SCONE_CONFIG_ID: "vault-$(OWNER_ID)/dev"
       VAULTINIT_AUTO_PROVISIONING_CONFIG_ID: "vault-init-auto-$(OWNER_ID)/dev"
       VAULTINIT_REGISTER_CONFIG_ID: "vault-init-parent-$(OWNER_ID)/dev"
