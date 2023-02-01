@@ -35,14 +35,22 @@ images:
         content: $$SCONE::VAULT_CA_crt$$
       - path: /opt/vault/resources/vault-init/client.pem
         content: $$SCONE::VAULT_INIT_CLIENT_CERT_crt$$
+
       - path: /opt/vault/resources/owner/conf/client-key.key
         content: $$SCONE::config_private_key:pem$$
       - path: /opt/vault/resources/owner/conf/client.crt
         content: $$SCONE::config_cert:crt$$
+
       - path: /opt/vault/resources/vault-init/conf/client-key.key
         content: $$SCONE::config_private_key:pem$$
       - path: /opt/vault/resources/vault-init/conf/client.crt
         content: $$SCONE::config_cert:crt$$
+
+      - path: /opt/vault/resources/vault/conf/client-key.key
+        content: $$SCONE::config_private_key:pem$$
+      - path: /opt/vault/resources/vault/conf/client.crt
+        content: $$SCONE::config_cert:crt$$
+
       - path: /opt/vault/resources/vault-init/application.yaml
         content: |
           # CAS config
