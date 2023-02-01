@@ -519,7 +519,7 @@ secrets:
     value: "$$SCONE::VAULT_CLIENT_CERT-owner-$OWNER_ID:crt$$"
   - name: VAULT_CLIENT_CERT-owner-${OWNER_ID}_privatekey
     kind: ascii
-    value: "$$SCONE::VAULT_CLIENT_CERT-owner-$OWNER_ID:privatekey$$"
+    value: "$$SCONE::VAULT_CLIENT_CERT-owner-$OWNER_ID:privatekey:pem$$"
   - name: encryption-key_pem
     kind: ascii
     value: "$$SCONE::encryption-key:pem$$"
