@@ -31,8 +31,8 @@ services:
 images:
     - name: vault-init
       injection_files:
-              #- path: /opt/vault/resources/vault-init/ca.pem
-              #content: $$SCONE::VAULT_CA_crt$$
+      - path: /opt/vault/resources/vault-init/ca.pem
+        content: $$SCONE::VAULT_CA:crt$$
               #- path: /opt/vault/resources/vault-init/client.pem
               #content: $$SCONE::VAULT_INIT_CLIENT_CERT_crt$$
 
@@ -245,7 +245,7 @@ images:
                 - path: /opt/vault/client-key.pem
                   content: $$SCONE::VAULT_CLIENT_CERT-bootstrap-${OWNER_ID}_privatekey$$
                 - path: /opt/vault/ca.pem
-                  content: $$SCONE::VAULT_CA_crt$$
+                  content: $$SCONE::VAULT_CA:crt$$
                 - path: /opt/vault/policy.hcl
                   content: |
                     path "kv/*" {
@@ -327,7 +327,7 @@ images:
                 - path: /opt/vault/resources/vault-init/conf/client.crt
                   content: $$SCONE::config_cert_crt$$
                 - path: /opt/vault/resources/vault-init/ca.pem
-                  content: $$SCONE::VAULT_CA_crt$$
+                  content: $$SCONE::VAULT_CA:crt$$
                 - path: /opt/vault/resources/vault-init/client.pem
                   content: $$SCONE::VAULT_INIT_CLIENT_CERT_crt$$
                 - path: /opt/vault/resources/vault-init/client-key.pem
@@ -433,7 +433,7 @@ images:
                 - path: /opt/vault/resources/vault/server-key.pem
                   content: $$SCONE::VAULT_SERVER_CERT_privatekey$$
                 - path: /opt/vault/resources/vault/ca.pem
-                  content: $$SCONE::VAULT_CA_crt$$
+                  content: $$SCONE::VAULT_CA:crt$$
                 - path: /opt/vault/resources/vault/config.hcl
                   content: |
                     storage "file" {
@@ -493,9 +493,14 @@ secrets:
   - name: VAULT_CLIENT_CERT-bootstrap-${OWNER_ID}_privatekey
     kind: ascii
     value: "$$SCONE::VAULT_CLIENT_CERT-bootstrap-$OWNER_ID:privatekey$$"
-  - name: VAULT_CA_crt
-    kind: ascii
-    value: "$$SCONE::VAULT_CA:crt$$"
+  - name: VAULT_CA
+    kind: x509-ca
+    import:
+      session: vault-init-auto-$OWNER_ID
+      secret: VAULT_CA
+      #- name: VAULT_CA_crt
+      #kind: ascii
+      #value: "$$SCONE::VAULT_CA:crt$$"
   - name: VAULT_INIT_CLIENT_CERT_crt
     kind: ascii
     value: "$$SCONE::VAULT_INIT_CLIENT_CERT:crt$$"
