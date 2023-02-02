@@ -59,16 +59,16 @@ secrets:
       secret: VAULT_TOKEN
   - name: VAULT_CLIENT_CERT-owner-$OWNER_ID
     import:
-      session: vault-init-auto-$OWNER_ID
+      session: vault-init-parent-$OWNER_ID
       secret: VAULT_CLIENT_CERT-owner-$OWNER_ID
   - name: VAULT_CLIENT_KEY-owner-$OWNER_ID
     import:
-      session: vault-init-auto-$OWNER_ID
+      session: vault-init-parent-$OWNER_ID
       secret: VAULT_CLIENT_KEY-owner-$OWNER_ID
   - name: VAULT_CA
     kind: x509-ca
     import:
-      session: vault-init-auto-$OWNER_ID
+      session: vault-init-parent-$OWNER_ID
       secret: VAULT_CA
 
 images:
@@ -77,7 +77,7 @@ images:
       - path: /opt/vault/resources/demo-client/client.pem
         content: $$SCONE::VAULT_CLIENT_CERT-owner-${OWNER_ID}:crt$$
       - path: /opt/vault/resources/demo-client/client-key.pem
-        content: $$SCONE::VAULT_CLIENT_CERT-owner-${OWNER_ID}:privatekey$$
+        content: $$SCONE::VAULT_CLIENT_KEY-owner-${OWNER_ID}:privatekey:pem$$
       - path: /opt/vault/resources/demo-client/ca.pem
         content: $$SCONE::VAULT_CA:crt$$
       - path: /opt/vault/vault-agent-config.hcl

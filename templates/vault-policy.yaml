@@ -579,12 +579,30 @@ secrets:
   - name: VAULT_SERVER_CERT_privatekey
     kind: ascii
     value: "$$SCONE::VAULT_SERVER_KEY:privatekey:pem$$"
+
+
+
+  - name: VAULT_CLIENT_CERT-owner-$OWNER_ID
+    kind: x509-ca
+    private_key: VAULT_CLIENT_KEY-owner-$OWNER_ID
+    export:
+    - session: owner-$OWNER_ID/demo-client
+  - name: VAULT_CLIENT_KEY-owner-$OWNER_ID
+    kind: private-key
+    export:
+    - session: owner-$OWNER_ID/demo-client
+
+
   - name: VAULT_CLIENT_CERT-owner-${OWNER_ID}_crt
     kind: ascii
     value: "$$SCONE::VAULT_CLIENT_CERT-owner-$OWNER_ID:crt$$"
   - name: VAULT_CLIENT_CERT-owner-${OWNER_ID}_privatekey
     kind: ascii
     value: "$$SCONE::VAULT_CLIENT_CERT-owner-$OWNER_ID:privatekey:pem$$"
+
+
+
+
   - name: encryption-key_pem
     kind: ascii
     value: "$$SCONE::encryption-key:pem$$"
