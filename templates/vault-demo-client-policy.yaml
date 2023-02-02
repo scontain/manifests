@@ -77,7 +77,8 @@ images:
       - path: /opt/vault/resources/demo-client/client.pem
         content: $$SCONE::VAULT_CLIENT_CERT-owner-${OWNER_ID}:crt$$
       - path: /opt/vault/resources/demo-client/client-key.pem
-        content: $$SCONE::VAULT_CLIENT_KEY-owner-${OWNER_ID}:privatekey:pem$$
+        #content: $$SCONE::VAULT_CLIENT_KEY-owner-${OWNER_ID}:privatekey:pem$$
+        content: $$SCONE::VAULT_CLIENT_KEY-owner-${OWNER_ID}:privatekey$$
       - path: /opt/vault/resources/demo-client/ca.pem
         content: $$SCONE::VAULT_CA:crt$$
       - path: /opt/vault/vault-agent-config.hcl

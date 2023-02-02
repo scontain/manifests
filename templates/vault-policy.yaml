@@ -37,7 +37,8 @@ images:
         content: $$SCONE::VAULT_INIT_CLIENT_CERT:crt$$
         #
       - path: /opt/vault/resources/vault-init/client-key.pem
-        content: $$SCONE::VAULT_INIT_CLIENT_KEY:privatekey:pem$$
+        content: $$SCONE::VAULT_INIT_CLIENT_KEY:privatekey$$
+        #content: $$SCONE::VAULT_INIT_CLIENT_KEY:privatekey:pem$$
         #
       - path: /opt/vault/resources/owner/conf/client-key.key
         content: $$SCONE::config_private_key:pem$$
@@ -532,7 +533,8 @@ secrets:
     value: "$$SCONE::VAULT_CLIENT_CERT-bootstrap-$OWNER_ID:crt$$"
   - name: VAULT_CLIENT_CERT-bootstrap-${OWNER_ID}_privatekey
     kind: ascii
-    value: "$$SCONE::VAULT_CLIENT_CERT-bootstrap-$OWNER_ID:privatekey:pem$$"
+    #value: "$$SCONE::VAULT_CLIENT_CERT-bootstrap-$OWNER_ID:privatekey:pem$$"
+    value: "$$SCONE::VAULT_CLIENT_CERT-bootstrap-$OWNER_ID:privatekey$$"
   - name: VAULT_CA
     kind: x509-ca
     private_key: VAULT_CA_KEY
@@ -566,7 +568,8 @@ secrets:
     value: "$$SCONE::VAULT_INIT_CLIENT_CERT:crt$$"
   - name: VAULT_INIT_CLIENT_CERT_privatekey
     kind: ascii
-    value: "$$SCONE::VAULT_INIT_CLIENT_KEY:privatekey:pem$$"
+    value: "$$SCONE::VAULT_INIT_CLIENT_KEY:privatekey$$"
+    #value: "$$SCONE::VAULT_INIT_CLIENT_KEY:privatekey:pem$$"
   - name: gpg_private_from_parent1_privatekey_base64
     kind: ascii
     value: "$$SCONE::gpg_private_from_parent1:privatekey:base64$$"
@@ -578,7 +581,8 @@ secrets:
     value: "$$SCONE::VAULT_SERVER_CERT:crt$$"
   - name: VAULT_SERVER_CERT_privatekey
     kind: ascii
-    value: "$$SCONE::VAULT_SERVER_KEY:privatekey:pem$$"
+    #value: "$$SCONE::VAULT_SERVER_KEY:privatekey:pem$$"
+    value: "$$SCONE::VAULT_SERVER_KEY:privatekey$$"
 
 
 
@@ -598,7 +602,8 @@ secrets:
     value: "$$SCONE::VAULT_CLIENT_CERT-owner-$OWNER_ID:crt$$"
   - name: VAULT_CLIENT_CERT-owner-${OWNER_ID}_privatekey
     kind: ascii
-    value: "$$SCONE::VAULT_CLIENT_CERT-owner-$OWNER_ID:privatekey:pem$$"
+    #value: "$$SCONE::VAULT_CLIENT_CERT-owner-$OWNER_ID:privatekey:pem$$"
+    value: "$$SCONE::VAULT_CLIENT_CERT-owner-$OWNER_ID:privatekey$$"
 
 
 
