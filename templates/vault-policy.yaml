@@ -298,14 +298,14 @@ images:
                 import:
                   session: vault-init-parent-$OWNER_ID
                   secret: VAULT_CA
-                export_public: true # Allow the CA to be fetched via Values API.
+                  #export_public: true # Allow the CA to be fetched via Values API.
               - name: VAULT_CA_KEY
                 kind: private-key
                 import:
                   session: vault-init-parent-$OWNER_ID
                   secret: VAULT_CA_KEY
-                export:
-                  - session: vault-$OWNER_ID
+                  #export:
+                  #- session: vault-$OWNER_ID
               - name: VAULT_INIT_CLIENT_CERT
                 issuer: VAULT_CA
                 common_name: "vault-init-client"
@@ -510,11 +510,12 @@ secrets:
   - name: VAULT_CA
     kind: x509-ca
     private_key: VAULT_CA_KEY
-    export:
-    - session: vault-init-auto-$OWNER_ID
-      #import:
-      #session: vault-init-auto-$OWNER_ID
-      #secret: VAULT_CA
+    export_public: true # Allow the CA to be fetched via Values API.
+    #export:
+    #- session: vault-init-auto-$OWNER_ID
+    ##import:
+    ##session: vault-init-auto-$OWNER_ID
+    ##secret: VAULT_CA
   - name: VAULT_CA_crt
     kind: ascii
     value: "$$SCONE::VAULT_CA:crt$$"
@@ -522,6 +523,7 @@ secrets:
     kind: private-key
     export:
     - session: vault-init-auto-$OWNER_ID
+    - session: vault-$OWNER_ID
   - name: VAULT_INIT_CLIENT_CERT
     issuer: VAULT_CA
     common_name: "vault-init-client"
