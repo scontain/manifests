@@ -300,6 +300,9 @@ images:
                 export_public: true # Allow the CA to be fetched via Values API.
               - name: VAULT_CA_KEY
                 kind: private-key
+                import:
+                  session: vault-init-parent-$OWNER_ID
+                  secret: VAULT_CA_KEY
                 export:
                   - session: vault-$OWNER_ID
               - name: VAULT_INIT_CLIENT_CERT
@@ -498,6 +501,7 @@ secrets:
     value: "$$SCONE::VAULT_CLIENT_CERT-bootstrap-$OWNER_ID:privatekey$$"
   - name: VAULT_CA
     kind: x509-ca
+    private_key: VAULT_CA_KEY
     export:
     - session: vault-init-auto-$OWNER_ID
       #import:
@@ -506,6 +510,10 @@ secrets:
       #- name: VAULT_CA_crt
       #kind: ascii
       #value: "$$SCONE::VAULT_CA:crt$$"
+  - name: VAULT_CA_KEY
+    kind: private-key
+    export:
+    - session: vault-init-auto-$OWNER_ID
   - name: VAULT_INIT_CLIENT_CERT_crt
     kind: ascii
     value: "$$SCONE::VAULT_INIT_CLIENT_CERT:crt$$"
