@@ -447,7 +447,7 @@ images:
                 - path: /opt/vault/resources/vault/server-key.pem
                   content: $$SCONE::VAULT_SERVER_CERT_privatekey$$
                 - path: /opt/vault/resources/vault/ca.pem
-                  content: $$SCONE::VAULT_CA:crt$$
+                  content: $$SCONE::VAULT_CA_crt$$
                 - path: /opt/vault/resources/vault/config.hcl
                   content: |
                     storage "file" {
