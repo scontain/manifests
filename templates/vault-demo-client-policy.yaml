@@ -23,7 +23,7 @@ services:
       VAULT_CACERT: "/opt/vault/resources/demo-client/ca.pem"
       VAULT_CLIENT_CERT: "/opt/vault/resources/demo-client/client.pem"
       VAULT_CLIENT_KEY: "/opt/vault/resources/demo-client/client-key.pem"
-      VAULT_SKIP_VERIFY: "true"
+      VAULT_SKIP_VERIFY: "false"
       # VAULT_ADDR is retrieved from the host.
       \@\@VAULT_ADDR: ""
   - name: confidential-agent
@@ -38,7 +38,7 @@ services:
       VAULT_CACERT: "/opt/vault/resources/demo-client/ca.pem"
       VAULT_CLIENT_CERT: "/opt/vault/resources/demo-client/client.pem"
       VAULT_CLIENT_KEY: "/opt/vault/resources/demo-client/client-key.pem"
-      VAULT_SKIP_VERIFY: "true"
+      VAULT_SKIP_VERIFY: "false"
       # VAULT_ADDR is retrieved from the host.
       \@\@VAULT_ADDR: ""
 
