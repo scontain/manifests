@@ -532,8 +532,12 @@ secrets:
     common_name: "vault-init-client"
     private_key: VAULT_INIT_CLIENT_KEY
     kind: x509
+    export:
+    - session: vault-init-auto-$OWNER_ID
   - name: VAULT_INIT_CLIENT_KEY
     kind: private-key
+    export:
+    - session: vault-init-auto-$OWNER_ID
   - name: VAULT_INIT_CLIENT_CERT_crt
     kind: ascii
     value: "$$SCONE::VAULT_INIT_CLIENT_CERT:crt$$"
