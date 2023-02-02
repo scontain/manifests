@@ -232,7 +232,8 @@ images:
             - name: VAULT_CA
               kind: x509-ca
               import:
-                session: vault-init-auto-$OWNER_ID
+                session: vault-init-parent-$OWNER_ID
+                #session: vault-init-auto-$OWNER_ID
                 secret: VAULT_CA
             - name: token_reviewer_jwt
               kind: ascii
@@ -418,11 +419,13 @@ images:
           secrets:
             - name: VAULT_CA
               import:
-                session: vault-init-auto-$OWNER_ID
+                session: vault-init-parent-$OWNER_ID
+                #session: vault-init-auto-$OWNER_ID
                 secret: VAULT_CA
             - name: VAULT_CA_KEY
               import:
-                session: vault-init-auto-$OWNER_ID
+                session: vault-init-parent-$OWNER_ID
+                #session: vault-init-auto-$OWNER_ID
                 secret: VAULT_CA_KEY
             - name: VAULT_SERVER_CERT
               issuer: VAULT_CA
