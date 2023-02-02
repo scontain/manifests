@@ -341,11 +341,11 @@ images:
                 - path: /opt/vault/resources/vault-init/conf/client.crt
                   content: $$SCONE::config_cert_crt$$
                 - path: /opt/vault/resources/vault-init/ca.pem
-                  content: $$SCONE::VAULT_CA:crt$$
+                  content: $$SCONE::VAULT_CA_crt$$
                 - path: /opt/vault/resources/vault-init/client.pem
-                  content: $$SCONE::VAULT_INIT_CLIENT_CERT:crt$$
+                  content: $$SCONE::VAULT_INIT_CLIENT_CERT_crt$$
                 - path: /opt/vault/resources/vault-init/client-key.pem
-                  content: $$SCONE::VAULT_INIT_CLIENT_CERT:privatekey:pem$$
+                  content: $$SCONE::VAULT_INIT_CLIENT_CERT_privatekey$$
                 - path: /opt/vault/resources/vault/keys/private.asc
                   content: |
                     $$SCONE::gpg_private_from_parent1_privatekey_base64$$
@@ -529,12 +529,12 @@ secrets:
     kind: x509
   - name: VAULT_INIT_CLIENT_KEY
     kind: private-key
-      #- name: VAULT_INIT_CLIENT_CERT_crt
-      #kind: ascii
-      #value: "$$SCONE::VAULT_INIT_CLIENT_CERT:crt$$"
-      #- name: VAULT_INIT_CLIENT_CERT_privatekey
-      #kind: ascii
-      #value: "$$SCONE::VAULT_INIT_CLIENT_CERT:privatekey$$"
+  - name: VAULT_INIT_CLIENT_CERT_crt
+    kind: ascii
+    value: "$$SCONE::VAULT_INIT_CLIENT_CERT:crt$$"
+  - name: VAULT_INIT_CLIENT_CERT_privatekey
+    kind: ascii
+    value: "$$SCONE::VAULT_INIT_CLIENT_CERT:privatekey$$"
   - name: gpg_private_from_parent1_privatekey_base64
     kind: ascii
     value: "$$SCONE::gpg_private_from_parent1:privatekey:base64$$"
