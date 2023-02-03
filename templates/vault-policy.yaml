@@ -34,7 +34,7 @@ images:
       - path: /opt/vault/resources/vault-init/ca.pem
         content: $$SCONE::VAULT_CA:crt$$
       - path: /opt/vault/resources/vault-init/client.pem
-        content: $$SCONE::VAULT_INIT_CLIENT_CERT:crt$$
+        content: $$SCONE::VAULT_INIT_CLIENT_CERT:crt:pem$$
         #
       - path: /opt/vault/resources/vault-init/client-key.pem
         content: $$SCONE::VAULT_INIT_CLIENT_KEY:pem$$
@@ -43,17 +43,17 @@ images:
       - path: /opt/vault/resources/owner/conf/client-key.key
         content: $$SCONE::config_private_key:pem$$
       - path: /opt/vault/resources/owner/conf/client.crt
-        content: $$SCONE::config_cert:crt$$
+        content: $$SCONE::config_cert:crt:pem$$
         #
       - path: /opt/vault/resources/vault-init/conf/client-key.key
         content: $$SCONE::config_private_key:pem$$
       - path: /opt/vault/resources/vault-init/conf/client.crt
-        content: $$SCONE::config_cert:crt$$
+        content: $$SCONE::config_cert:crt:pem$$
         #
       - path: /opt/vault/resources/vault/conf/client-key.key
         content: $$SCONE::config_private_key:pem$$
       - path: /opt/vault/resources/vault/conf/client.crt
-        content: $$SCONE::config_cert:crt$$
+        content: $$SCONE::config_cert:crt:pem$$
         #
       - path: /opt/vault/resources/vault-init/application.yaml
         content: |
@@ -530,7 +530,7 @@ secrets:
 
   - name: VAULT_CLIENT_CERT-bootstrap-${OWNER_ID}_crt
     kind: ascii
-    value: "$$SCONE::VAULT_CLIENT_CERT-bootstrap-$OWNER_ID:crt$$"
+    value: "$$SCONE::VAULT_CLIENT_CERT-bootstrap-$OWNER_ID:crt:pem$$"
   - name: VAULT_CLIENT_KEY-bootstrap-${OWNER_ID}_privatekey
     kind: ascii
     #value: "$$SCONE::VAULT_CLIENT_CERT-bootstrap-$OWNER_ID:privatekey:pem$$"
@@ -546,7 +546,7 @@ secrets:
     ##secret: VAULT_CA
   - name: VAULT_CA_crt
     kind: ascii
-    value: "$$SCONE::VAULT_CA:crt$$"
+    value: "$$SCONE::VAULT_CA:crt:pem$$"
   - name: VAULT_CA_KEY
     kind: private-key
     export:
@@ -565,7 +565,7 @@ secrets:
     - session: vault-init-auto-$OWNER_ID
   - name: VAULT_INIT_CLIENT_CERT_crt
     kind: ascii
-    value: "$$SCONE::VAULT_INIT_CLIENT_CERT:crt$$"
+    value: "$$SCONE::VAULT_INIT_CLIENT_CERT:crt:pem$$"
   - name: VAULT_INIT_CLIENT_CERT_privatekey
     kind: ascii
     value: "$$SCONE::VAULT_INIT_CLIENT_KEY:pem$$"
@@ -578,7 +578,7 @@ secrets:
     value: "$$SCONE::gpg_private_from_parent1:publickey:base64$$"
   - name: VAULT_SERVER_CERT_crt
     kind: ascii
-    value: "$$SCONE::VAULT_SERVER_CERT:crt$$"
+    value: "$$SCONE::VAULT_SERVER_CERT:crt:pem$$"
   - name: VAULT_SERVER_CERT_privatekey
     kind: ascii
     #value: "$$SCONE::VAULT_SERVER_KEY:privatekey:pem$$"
@@ -599,7 +599,7 @@ secrets:
 
   - name: VAULT_CLIENT_CERT-owner-${OWNER_ID}_crt
     kind: ascii
-    value: "$$SCONE::VAULT_CLIENT_CERT-owner-$OWNER_ID:crt$$"
+    value: "$$SCONE::VAULT_CLIENT_CERT-owner-$OWNER_ID:crt:pem$$"
   - name: VAULT_CLIENT_KEY-owner-${OWNER_ID}_privatekey
     kind: ascii
     #value: "$$SCONE::VAULT_CLIENT_CERT-owner-$OWNER_ID:privatekey:pem$$"
@@ -632,7 +632,7 @@ secrets:
     value: "$$SCONE::config_private_key:pem$$"
   - name: config_cert_crt
     kind: ascii
-    value: "$$SCONE::config_cert:crt$$"
+    value: "$$SCONE::config_cert:crt:pem$$"
   - name: pass_phrase
     kind: binary
     size: 16
