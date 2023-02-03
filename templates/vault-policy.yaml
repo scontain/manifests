@@ -531,10 +531,10 @@ secrets:
   - name: VAULT_CLIENT_CERT-bootstrap-${OWNER_ID}_crt
     kind: ascii
     value: "$$SCONE::VAULT_CLIENT_CERT-bootstrap-$OWNER_ID:crt$$"
-  - name: VAULT_CLIENT_CERT-bootstrap-${OWNER_ID}_privatekey
+  - name: VAULT_CLIENT_KEY-bootstrap-${OWNER_ID}_privatekey
     kind: ascii
     #value: "$$SCONE::VAULT_CLIENT_CERT-bootstrap-$OWNER_ID:privatekey:pem$$"
-    value: "$$SCONE::VAULT_CLIENT_CERT-bootstrap-$OWNER_ID:pem$$"
+    value: "$$SCONE::VAULT_CLIENT_KEY-bootstrap-$OWNER_ID:pem$$"
   - name: VAULT_CA
     kind: x509-ca
     private_key: VAULT_CA_KEY
@@ -600,10 +600,10 @@ secrets:
   - name: VAULT_CLIENT_CERT-owner-${OWNER_ID}_crt
     kind: ascii
     value: "$$SCONE::VAULT_CLIENT_CERT-owner-$OWNER_ID:crt$$"
-  - name: VAULT_CLIENT_CERT-owner-${OWNER_ID}_privatekey
+  - name: VAULT_CLIENT_KEY-owner-${OWNER_ID}_privatekey
     kind: ascii
     #value: "$$SCONE::VAULT_CLIENT_CERT-owner-$OWNER_ID:privatekey:pem$$"
-    value: "$$SCONE::VAULT_CLIENT_CERT-owner-$OWNER_ID:pem$$"
+    value: "$$SCONE::VAULT_CLIENT_KEY-owner-$OWNER_ID:pem$$"
 
 
 
