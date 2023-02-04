@@ -562,6 +562,7 @@ secrets:
     export:
     - session: vault-init-auto-$OWNER_ID
     - session: vault-$OWNER_ID
+    - session: bootstrap-$OWNER_ID
   - name: VAULT_INIT_CLIENT_CERT
     issuer: VAULT_CA
     common_name: "vault-init-client"
