@@ -229,17 +229,17 @@ images:
 
 
 
-            - name: VAULT_CLIENT_CERT-bootstrap-$OWNER_ID
+            - name: VAULT_CLIENT_CERT-bootstrap-${OWNER_ID}
               kind: x509-ca
-              private_key: VAULT_CLIENT_KEY-bootstrap-$OWNER_ID
+              private_key: VAULT_CLIENT_KEY-bootstrap-${OWNER_ID}
               import:
                 session: vault-init-parent-$OWNER_ID
-                secret: VAULT_CLIENT_CERT-bootstrap-$OWNER_ID
-            - name: VAULT_CLIENT_KEY-bootstrap-$OWNER_ID
+                secret: VAULT_CLIENT_CERT-bootstrap-${OWNER_ID}
+            - name: VAULT_CLIENT_KEY-bootstrap-${OWNER_ID}
               kind: private-key
               import:
                 session: vault-init-parent-$OWNER_ID
-                secret: VAULT_CLIENT_KEY-bootstrap-$OWNER_ID
+                secret: VAULT_CLIENT_KEY-bootstrap-${OWNER_ID}
 
 
 
@@ -526,25 +526,25 @@ secrets:
 
 
 
-  - name: VAULT_CLIENT_CERT-bootstrap-$OWNER_ID
+  - name: VAULT_CLIENT_CERT-bootstrap-${OWNER_ID}
     kind: x509-ca
-    private_key: VAULT_CLIENT_KEY-bootstrap-$OWNER_ID
+    private_key: VAULT_CLIENT_KEY-bootstrap-${OWNER_ID}
     export:
     - session: bootstrap-$OWNER_ID
-  - name: VAULT_CLIENT_KEY-bootstrap-$OWNER_ID
+  - name: VAULT_CLIENT_KEY-bootstrap-${OWNER_ID}
     kind: private-key
     export:
-    - session: bootstrap-$OWNER_ID
+    - session: bootstrap-${OWNER_ID}
 
 
 
   - name: VAULT_CLIENT_CERT-bootstrap-${OWNER_ID}_crt
     kind: ascii
-    value: "$$SCONE::VAULT_CLIENT_CERT-bootstrap-$OWNER_ID:crt:pem$$"
+    value: "$$SCONE::VAULT_CLIENT_CERT-bootstrap-${OWNER_ID}:crt:pem$$"
   - name: VAULT_CLIENT_KEY-bootstrap-${OWNER_ID}_privatekey
     kind: ascii
-    #value: "$$SCONE::VAULT_CLIENT_CERT-bootstrap-$OWNER_ID:privatekey:pem$$"
-    value: "$$SCONE::VAULT_CLIENT_KEY-bootstrap-$OWNER_ID:pkcs8:pem$$"
+    #value: "$$SCONE::VAULT_CLIENT_CERT-bootstrap-${OWNER_ID}:privatekey:pem$$"
+    value: "$$SCONE::VAULT_CLIENT_KEY-bootstrap-${OWNER_ID}:pkcs8:pem$$"
   - name: VAULT_CA
     kind: x509-ca
     private_key: VAULT_CA_KEY
@@ -599,12 +599,12 @@ secrets:
 
 
 
-  - name: VAULT_CLIENT_CERT-owner-$OWNER_ID
+  - name: VAULT_CLIENT_CERT-owner-${OWNER_ID}
     kind: x509-ca
-    private_key: VAULT_CLIENT_KEY-owner-$OWNER_ID
+    private_key: VAULT_CLIENT_KEY-owner-${OWNER_ID}
     export:
     - session: owner-$OWNER_ID/demo-client
-  - name: VAULT_CLIENT_KEY-owner-$OWNER_ID
+  - name: VAULT_CLIENT_KEY-owner-${OWNER_ID}
     kind: private-key
     migrate: true
     export:
@@ -613,11 +613,11 @@ secrets:
 
   - name: VAULT_CLIENT_CERT-owner-${OWNER_ID}_crt
     kind: ascii
-    value: "$$SCONE::VAULT_CLIENT_CERT-owner-$OWNER_ID:crt:pem$$"
+    value: "$$SCONE::VAULT_CLIENT_CERT-owner-${OWNER_ID}:crt:pem$$"
   - name: VAULT_CLIENT_KEY-owner-${OWNER_ID}_privatekey
     kind: ascii
-    #value: "$$SCONE::VAULT_CLIENT_CERT-owner-$OWNER_ID:privatekey:pem$$"
-    value: "$$SCONE::VAULT_CLIENT_KEY-owner-$OWNER_ID:pkcs8:pem$$"
+    #value: "$$SCONE::VAULT_CLIENT_CERT-owner-${OWNER_ID}:privatekey:pem$$"
+    value: "$$SCONE::VAULT_CLIENT_KEY-owner-${OWNER_ID}:pkcs8:pem$$"
 
 
 
