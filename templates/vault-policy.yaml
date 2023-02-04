@@ -122,6 +122,7 @@ images:
             pwd: /
             environment:
               SCONE_MODE: hw
+              SCONE_ALLOW_DLOPEN: "no"
               VAULT_TOKEN: $$SCONE::VAULT_TOKEN$$
               VAULT_CACERT: "/opt/vault/ca.pem"
               VAULT_CLIENT_CERT: "/opt/vault/client.pem"
@@ -137,6 +138,7 @@ images:
             pwd: /
             environment:
               SCONE_MODE: hw
+              SCONE_ALLOW_DLOPEN: "no"
               VAULT_TOKEN: $$SCONE::VAULT_TOKEN$$
               VAULT_CACERT: "/opt/vault/ca.pem"
               VAULT_CLIENT_CERT: "/opt/vault/client.pem"
@@ -152,6 +154,7 @@ images:
             pwd: /
             environment:
               SCONE_MODE: hw
+              SCONE_ALLOW_DLOPEN: "no"
               VAULT_TOKEN: $$SCONE::VAULT_TOKEN$$
               VAULT_CACERT: "/opt/vault/ca.pem"
               VAULT_CLIENT_CERT: "/opt/vault/client.pem"
@@ -167,6 +170,7 @@ images:
             pwd: /
             environment:
               SCONE_MODE: hw
+              SCONE_ALLOW_DLOPEN: "no"
               VAULT_TOKEN: $$SCONE::VAULT_TOKEN$$
               VAULT_CACERT: "/opt/vault/ca.pem"
               VAULT_CLIENT_CERT: "/opt/vault/client.pem"
@@ -182,6 +186,7 @@ images:
             pwd: /
             environment:
               SCONE_MODE: hw
+              SCONE_ALLOW_DLOPEN: "no"
               VAULT_TOKEN: $$SCONE::VAULT_TOKEN$$
               VAULT_CACERT: "/opt/vault/ca.pem"
               VAULT_CLIENT_CERT: "/opt/vault/client.pem"
@@ -197,6 +202,7 @@ images:
             pwd: /
             environment:
               SCONE_MODE: hw
+              SCONE_ALLOW_DLOPEN: "no"
               VAULT_TOKEN: $$SCONE::VAULT_TOKEN$$
               VAULT_CACERT: "/opt/vault/ca.pem"
               VAULT_CLIENT_CERT: "/opt/vault/client.pem"
@@ -426,6 +432,7 @@ images:
             pwd: /
             environment:
               SCONE_MODE: hw
+              SCONE_ALLOW_DLOPEN: "no"
 
           secrets:
             - name: VAULT_CA
