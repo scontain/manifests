@@ -454,6 +454,7 @@ images:
                 - vault
                 - localhost
                 - 127.0.0.1
+                - $VAULT_NAME.$NAMESPACE.svc
             - name: VAULT_SERVER_KEY
               kind: private-key
             - name: encryption-key
