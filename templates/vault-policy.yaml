@@ -213,14 +213,14 @@ images:
               import:
                 session: vault-init-auto-$OWNER_ID
                 secret: VAULT_TOKEN
-            - name: VAULT_CLIENT_CERT-bootstrap-$OWNER_ID
+            - name: VAULT_CLIENT_CERT-bootstrap
               import:
                 session: vault-init-auto-$OWNER_ID
-                secret: VAULT_CLIENT_CERT-bootstrap-$OWNER_ID
-            - name: VAULT_CLIENT_KEY-bootstrap-$OWNER_ID
+                secret: VAULT_CLIENT_CERT-bootstrap
+            - name: VAULT_CLIENT_KEY-bootstrap
               import:
                 session: vault-init-auto-$OWNER_ID
-                secret: VAULT_CLIENT_KEY-bootstrap-$OWNER_ID
+                secret: VAULT_CLIENT_KEY-bootstrap
             - name: SECRET
               kind: ascii
               size: 16
@@ -236,9 +236,9 @@ images:
             - name: bootstrap
               injection_files:
                 - path: /opt/vault/client.pem
-                  content: $$SCONE::VAULT_CLIENT_CERT-bootstrap-${OWNER_ID}_crt$$
+                  content: $$SCONE::VAULT_CLIENT_CERT-bootstrap_crt$$
                 - path: /opt/vault/client-key.pem
-                  content: $$SCONE::VAULT_CLIENT_KEY-bootstrap-${OWNER_ID}_privatekey$$
+                  content: $$SCONE::VAULT_CLIENT_KEY-bootstrap_privatekey$$
                 - path: /opt/vault/ca.pem
                   content: $$SCONE::VAULT_CA_crt$$
                 - path: /opt/vault/policy.hcl
@@ -483,12 +483,12 @@ secrets:
   - name: token_reviewer_jwt
     kind: ascii
     value: "$$SCONE::token_reviewer_jwt$$"
-  - name: VAULT_CLIENT_CERT-bootstrap-${OWNER_ID}_crt
+  - name: VAULT_CLIENT_CERT-bootstrap_crt
     kind: ascii
-    value: "$$SCONE::VAULT_CLIENT_CERT-bootstrap-$OWNER_ID:crt:pem$$"
-  - name: VAULT_CLIENT_KEY-bootstrap-${OWNER_ID}_privatekey
+    value: "$$SCONE::VAULT_CLIENT_CERT-bootstrap:crt:pem$$"
+  - name: VAULT_CLIENT_KEY-bootstrap_privatekey
     kind: ascii
-    value: "$$SCONE::VAULT_CLIENT_KEY-bootstrap-$OWNER_ID:pkcs8:pem$$"
+    value: "$$SCONE::VAULT_CLIENT_KEY-bootstrap:pkcs8:pem$$"
   - name: VAULT_CA_crt
     kind: ascii
     value: "$$SCONE::VAULT_CA:crt:pem$$"
@@ -510,12 +510,12 @@ secrets:
   - name: VAULT_SERVER_CERT_privatekey
     kind: ascii
     value: "$$SCONE::VAULT_SERVER_KEY:pkcs8:pem$$"
-  - name: VAULT_CLIENT_CERT-owner-${OWNER_ID}_crt
+  - name: VAULT_CLIENT_CERT-owner_crt
     kind: ascii
-    value: "$$SCONE::VAULT_CLIENT_CERT-owner-$OWNER_ID:crt:pem$$"
-  - name: VAULT_CLIENT_KEY-owner-${OWNER_ID}_privatekey
+    value: "$$SCONE::VAULT_CLIENT_CERT-owner:crt:pem$$"
+  - name: VAULT_CLIENT_KEY-owner_privatekey
     kind: ascii
-    value: "$$SCONE::VAULT_CLIENT_KEY-owner-$OWNER_ID:pkcs8:pem$$"
+    value: "$$SCONE::VAULT_CLIENT_KEY-owner:pkcs8:pem$$"
   - name: encryption-key_pem
     kind: ascii
     value: "$$SCONE::encryption-key:pem$$"
