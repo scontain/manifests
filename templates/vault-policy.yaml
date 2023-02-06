@@ -71,7 +71,7 @@ images:
               # them from resources/owner/session.yml.
               - public_key_path: /opt/vault/resources/vault/keys/public.asc
                 private_key_path: /opt/vault/resources/vault/keys/private.asc
-                pass_phrase:  $$SCONE::pass_phrase$$
+                pass_phrase: "$$SCONE::pass_phrase:hex$$"
       - path: /opt/vault/resources/vault-init/session_register.yml
         content: |
           # NOTE: This is the main configuration file of vault-init.
@@ -361,7 +361,7 @@ images:
                         # them from resources/owner/session.yml.
                         - public_key_path: /opt/vault/resources/vault/keys/public.asc
                           private_key_path: /opt/vault/resources/vault/keys/private.asc
-                          pass_phrase: $$SCONE::pass_phrase_name$$
+                          pass_phrase: "$$SCONE::pass_phrase_name$$"
 
           security:
             attestation:
@@ -542,11 +542,11 @@ secrets:
     kind: ascii
     value: "$$SCONE::config_cert:crt$$"
   - name: pass_phrase
-    kind: ascii
-    size: 32
+    kind: binary
+    size: 16
     export:
     - session: vault-init-auto-$OWNER_ID
     - session: owner-verify-$OWNER_ID
   - name: pass_phrase_name
     kind: ascii
-    value: "$$SCONE::pass_phrase$$"
+    value: "$$SCONE::pass_phrase:hex$$"
