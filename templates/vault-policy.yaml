@@ -214,10 +214,13 @@ images:
                 session: vault-init-auto-$OWNER_ID
                 secret: VAULT_TOKEN
             - name: VAULT_CLIENT_CERT-bootstrap
+              kind: x509-ca
+              private_key: VAULT_CLIENT_KEY-bootstrap
               import:
                 session: vault-init-auto-$OWNER_ID
                 secret: VAULT_CLIENT_CERT-bootstrap
             - name: VAULT_CLIENT_KEY-bootstrap
+              kind: private-key
               import:
                 session: vault-init-auto-$OWNER_ID
                 secret: VAULT_CLIENT_KEY-bootstrap
