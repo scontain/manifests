@@ -75,11 +75,11 @@ images:
   - name: demo-client
     injection_files:
       - path: /opt/vault/resources/demo-client/client.pem
-        content: $$SCONE::VAULT_CLIENT_CERT-owner-${OWNER_ID}:crt$$
+        content: $$SCONE::VAULT_CLIENT_CERT-owner-${OWNER_ID}:crt:pem$$
       - path: /opt/vault/resources/demo-client/client-key.pem
         content: $$SCONE::VAULT_CLIENT_CERT-owner-${OWNER_ID}:privatekey$$
       - path: /opt/vault/resources/demo-client/ca.pem
-        content: $$SCONE::VAULT_CA:crt$$
+        content: $$SCONE::VAULT_CA:crt:pem$$
       - path: /opt/vault/vault-agent-config.hcl
         content: |
           # Comment this out if running as sidecar instead of initContainer
