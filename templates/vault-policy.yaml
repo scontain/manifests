@@ -114,7 +114,7 @@ images:
               VAULT_CACERT: "/opt/vault/ca.pem"
               VAULT_CLIENT_CERT: "/opt/vault/client.pem"
               VAULT_CLIENT_KEY: "/opt/vault/client-key.pem"
-              VAULT_SKIP_VERIFY: "true"
+              VAULT_SKIP_VERIFY: "false"
               # VAULT_ADDR is retrieved from the host.
               \@\@VAULT_ADDR: ""
           - name: bootstrap-put-kv-secret
@@ -129,7 +129,7 @@ images:
               VAULT_CACERT: "/opt/vault/ca.pem"
               VAULT_CLIENT_CERT: "/opt/vault/client.pem"
               VAULT_CLIENT_KEY: "/opt/vault/client-key.pem"
-              VAULT_SKIP_VERIFY: "true"
+              VAULT_SKIP_VERIFY: "false"
               # VAULT_ADDR is retrieved from the host.
               \@\@VAULT_ADDR: ""
           - name: bootstrap-write-policy
@@ -144,7 +144,7 @@ images:
               VAULT_CACERT: "/opt/vault/ca.pem"
               VAULT_CLIENT_CERT: "/opt/vault/client.pem"
               VAULT_CLIENT_KEY: "/opt/vault/client-key.pem"
-              VAULT_SKIP_VERIFY: "true"
+              VAULT_SKIP_VERIFY: "false"
               # VAULT_ADDR is retrieved from the host.
               \@\@VAULT_ADDR: ""
           - name: bootstrap-enable-kubernetes
@@ -159,7 +159,7 @@ images:
               VAULT_CACERT: "/opt/vault/ca.pem"
               VAULT_CLIENT_CERT: "/opt/vault/client.pem"
               VAULT_CLIENT_KEY: "/opt/vault/client-key.pem"
-              VAULT_SKIP_VERIFY: "true"
+              VAULT_SKIP_VERIFY: "false"
               # VAULT_ADDR is retrieved from the host.
               \@\@VAULT_ADDR: ""
           - name: bootstrap-config-kubernetes
@@ -174,7 +174,7 @@ images:
               VAULT_CACERT: "/opt/vault/ca.pem"
               VAULT_CLIENT_CERT: "/opt/vault/client.pem"
               VAULT_CLIENT_KEY: "/opt/vault/client-key.pem"
-              VAULT_SKIP_VERIFY: "true"
+              VAULT_SKIP_VERIFY: "false"
               # VAULT_ADDR is retrieved from the host.
               \@\@VAULT_ADDR: ""
           - name: bootstrap-bind-role
@@ -189,7 +189,7 @@ images:
               VAULT_CACERT: "/opt/vault/ca.pem"
               VAULT_CLIENT_CERT: "/opt/vault/client.pem"
               VAULT_CLIENT_KEY: "/opt/vault/client-key.pem"
-              VAULT_SKIP_VERIFY: "true"
+              VAULT_SKIP_VERIFY: "false"
               # VAULT_ADDR is retrieved from the host.
               \@\@VAULT_ADDR: ""
           security:
