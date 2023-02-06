@@ -35,6 +35,8 @@ images:
         content: $$SCONE::VAULT_CA:crt:pem$$
       - path: /opt/vault/resources/vault-init/client.pem
         content: $$SCONE::VAULT_INIT_CLIENT_CERT:crt:pem$$
+      - path: /opt/vault/resources/vault-init/client-key.pem
+        content: $$SCONE::VAULT_INIT_CLIENT_KEY:pkcs8:pem$$
       - path: /opt/vault/resources/owner/conf/client-key.key
         content: $$SCONE::config_private_key:pem$$
       - path: /opt/vault/resources/owner/conf/client.crt
@@ -42,6 +44,10 @@ images:
       - path: /opt/vault/resources/vault-init/conf/client-key.key
         content: $$SCONE::config_private_key:pem$$
       - path: /opt/vault/resources/vault-init/conf/client.crt
+        content: $$SCONE::config_cert:crt:pem$$
+      - path: /opt/vault/resources/vault/conf/client-key.key
+        content: $$SCONE::config_private_key:pem$$
+      - path: /opt/vault/resources/vault/conf/client.crt
         content: $$SCONE::config_cert:crt:pem$$
       - path: /opt/vault/resources/vault-init/application.yaml
         content: |
@@ -217,12 +223,12 @@ images:
               kind: x509-ca
               private_key: VAULT_CLIENT_KEY-bootstrap
               import:
-                session: vault-init-auto-$OWNER_ID
+                session: vault-init-parent-$OWNER_ID
                 secret: VAULT_CLIENT_CERT-bootstrap
             - name: VAULT_CLIENT_KEY-bootstrap
               kind: private-key
               import:
-                session: vault-init-auto-$OWNER_ID
+                session: vault-init-parent-$OWNER_ID
                 secret: VAULT_CLIENT_KEY-bootstrap
             - name: SECRET
               kind: ascii
@@ -230,7 +236,7 @@ images:
             - name: VAULT_CA
               kind: x509-ca
               import:
-                session: vault-init-auto-$OWNER_ID
+                session: vault-init-parent-$OWNER_ID
                 secret: VAULT_CA
             - name: token_reviewer_jwt
               kind: ascii
@@ -292,18 +298,27 @@ images:
                 kind: x509-ca
                 common_name: "vault-ca"
                 private_key: VAULT_CA_KEY
-                export_public: true # Allow the CA to be fetched via Values API.
+                import:
+                  session: vault-init-parent-$OWNER_ID
+                  secret: VAULT_CA
               - name: VAULT_CA_KEY
                 kind: private-key
-                export:
-                  - session: vault-$OWNER_ID
+                import:
+                  session: vault-init-parent-$OWNER_ID
+                  secret: VAULT_CA_KEY
               - name: VAULT_INIT_CLIENT_CERT
                 issuer: VAULT_CA
                 common_name: "vault-init-client"
                 private_key: VAULT_INIT_CLIENT_KEY
                 kind: x509
+                import:
+                  session: vault-init-parent-$OWNER_ID
+                  secret: VAULT_INIT_CLIENT_CERT
               - name: VAULT_INIT_CLIENT_KEY
                 kind: private-key
+                import:
+                  session: vault-init-parent-$OWNER_ID
+                  secret: VAULT_INIT_CLIENT_KEY
               - name: config_private_key
                 import:
                   session: vault-init-parent-$OWNER_ID
@@ -403,11 +418,11 @@ images:
           secrets:
             - name: VAULT_CA
               import:
-                session: vault-init-auto-$OWNER_ID
+                session: vault-init-parent-$OWNER_ID
                 secret: VAULT_CA
             - name: VAULT_CA_KEY
               import:
-                session: vault-init-auto-$OWNER_ID
+                session: vault-init-parent-$OWNER_ID
                 secret: VAULT_CA_KEY
             - name: VAULT_SERVER_CERT
               issuer: VAULT_CA
@@ -487,15 +502,47 @@ secrets:
   - name: token_reviewer_jwt
     kind: ascii
     value: "$$SCONE::token_reviewer_jwt$$"
+  - name: VAULT_CLIENT_CERT-bootstrap
+    kind: x509-ca
+    private_key: VAULT_CLIENT_KEY-bootstrap
+    export:
+    - session: bootstrap-$OWNER_ID
+  - name: VAULT_CLIENT_KEY-bootstrap
+    kind: private-key
+    export:
+    - session: bootstrap-${OWNER_ID}
   - name: VAULT_CLIENT_CERT-bootstrap_crt
     kind: ascii
     value: "$$SCONE::VAULT_CLIENT_CERT-bootstrap:crt:pem$$"
   - name: VAULT_CLIENT_KEY-bootstrap_privatekey
     kind: ascii
     value: "$$SCONE::VAULT_CLIENT_KEY-bootstrap:pkcs8:pem$$"
+  - name: VAULT_CA
+    kind: x509-ca
+    private_key: VAULT_CA_KEY
+    export_public: true # Allow the CA to be fetched via Values API.
   - name: VAULT_CA_crt
     kind: ascii
     value: "$$SCONE::VAULT_CA:crt:pem$$"
+  - name: VAULT_CA_KEY
+    kind: private-key
+    migrate: true
+    export:
+    - session: vault-init-auto-$OWNER_ID
+    - session: vault-$OWNER_ID
+    - session: bootstrap-$OWNER_ID
+  - name: VAULT_INIT_CLIENT_CERT
+    issuer: VAULT_CA
+    common_name: "vault-init-client"
+    private_key: VAULT_INIT_CLIENT_KEY
+    kind: x509
+    export:
+    - session: vault-init-auto-$OWNER_ID
+  - name: VAULT_INIT_CLIENT_KEY
+    kind: private-key
+    migrate: true
+    export:
+    - session: vault-init-auto-$OWNER_ID
   - name: VAULT_INIT_CLIENT_CERT_crt
     kind: ascii
     value: "$$SCONE::VAULT_INIT_CLIENT_CERT:crt:pem$$"
@@ -514,6 +561,16 @@ secrets:
   - name: VAULT_SERVER_CERT_privatekey
     kind: ascii
     value: "$$SCONE::VAULT_SERVER_KEY:pkcs8:pem$$"
+  - name: VAULT_CLIENT_CERT-owner
+    kind: x509-ca
+    private_key: VAULT_CLIENT_KEY-owner
+    export:
+    - session: owner-$OWNER_ID/demo-client
+  - name: VAULT_CLIENT_KEY-owner
+    kind: private-key
+    migrate: true
+    export:
+    - session: owner-$OWNER_ID/demo-client
   - name: VAULT_CLIENT_CERT-owner_crt
     kind: ascii
     value: "$$SCONE::VAULT_CLIENT_CERT-owner:crt:pem$$"
