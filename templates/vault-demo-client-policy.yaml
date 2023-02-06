@@ -59,16 +59,16 @@ secrets:
       secret: VAULT_TOKEN
   - name: VAULT_CLIENT_CERT-owner
     import:
-      session: vault-init-auto-$OWNER_ID
+      session: vault-init-parent-$OWNER_ID
       secret: VAULT_CLIENT_CERT-owner
   - name: VAULT_CLIENT_KEY-owner
     import:
-      session: vault-init-auto-$OWNER_ID
+      session: vault-init-parent-$OWNER_ID
       secret: VAULT_CLIENT_KEY-owner
   - name: VAULT_CA
     kind: x509-ca
     import:
-      session: vault-init-auto-$OWNER_ID
+      session: vault-init-parent-$OWNER_ID
       secret: VAULT_CA
 
 images:
