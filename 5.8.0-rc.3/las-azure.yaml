@@ -4,7 +4,7 @@ metadata:
   name: las
 spec:
   autoUpdate: true
-  image: "registry.scontain.com/scone.cloud/las:azure-${VERSION}"
+  image: "registry.scontain.com/scone.cloud/las:azure-5.8.0-rc.3"
   imagePullSecrets:
    - name: scone-operator-pull
   imagePullPolicy: Always
