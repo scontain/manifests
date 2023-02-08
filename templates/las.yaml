@@ -4,7 +4,7 @@ metadata:
   name: las
 spec:
   autoUpdate: true
-  image: "registry.scontain.com/scone.cloud/las:no-epid-production-${VERSION}"
+  image: "${IMAGE_REPO}/las:no-epid-production-${VERSION}"
   imagePullSecrets:
    - name: scone-operator-pull
   imagePullPolicy: Always
