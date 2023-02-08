@@ -7,7 +7,7 @@ spec:
   - name: sconeapps
   restartPolicy: Never
   containers:
-  - image: $VAULT_IMAGE
+  - image: $VAULT_VERIFIER_IMAGE
     name: vault-verifier
     command:
     - bash
