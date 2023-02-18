@@ -8,7 +8,7 @@ spec:
     dev:
       enabled: false
     dataStorage:
-      enabled: false
+      enabled: true
     image:
       repository: "$VAULT_IMAGE_REPO"
       tag: "$VAULT_IMAGE_TAG"
