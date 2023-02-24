@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: vault-verifier
+spec:
+  imagePullSecrets:
+  - name: sconeapps
+  restartPolicy: Never
+  containers:
+  - image: $VAULT_VERIFIER_IMAGE
+    name: vault-verifier
+    command:
+    - bash
+    - -c
+    args:
+      - "vault-statement-verifier -s /tmp/statement && echo \"Successfully verified statement\" || echo \"Statement could not be decrypted with the provided key\" "
+    resources:
+      limits:
+        sgx.intel.com/enclave: "1"
+    env:
+    - name: SCONE_CAS_ADDR
+      value: "$SCONE_CAS_ADDR"
+    - name: SCONE_LAS_ADDR
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: status.hostIP
+    - name: OWNER_ID
+      value: "$OWNER_ID"
+    - name: SCONE_CONFIG_ID
+      value: "owner-verify-$(OWNER_ID)/dev"
+    volumeMounts:
+      - name: statement-secret
+        mountPath: /tmp
+  volumes:
+  - name: statement-secret
+    secret:
+      secretName: verifier-statement
