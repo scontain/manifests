@@ -4,12 +4,10 @@ name: owner-verify-$OWNER_ID
 security:
   attestation:
     tolerate:
-    - debug-mode
     - outdated-tcb
     - insecure-configuration
     - hyperthreading
     - software-hardening-needed
-    ignore_advisories: '*'
 
 services:
    - name: insecure

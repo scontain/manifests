@@ -45,12 +45,10 @@ services:
 security:
   attestation:
     tolerate:
-    - debug-mode
     - outdated-tcb
     - insecure-configuration
     - hyperthreading
     - software-hardening-needed
-    ignore_advisories: '*'
 
 secrets:
   - name: VAULT_TOKEN
