@@ -1,0 +1,620 @@
+version: "0.3.10"
+name: vault-init-parent-$OWNER_ID
+
+access_policy:
+  create_sessions:
+    - $OWNER
+  read:
+    - $OWNER
+  update:
+    - $OWNER
+
+security:
+  attestation:
+    tolerate:
+    - debug-mode
+    - outdated-tcb
+    - insecure-configuration
+    - hyperthreading
+    - software-hardening-needed
+    ignore_advisories: '*'
+
+services:
+   - name: dev
+     image_name: vault-init
+     mrenclaves: [$VAULTINIT_DEFAULT_HEAP_MRENCLAVE]
+     command: /usr/local/bin/vault-init register /opt/vault/resources/vault-init/session_register.yml
+     pwd: /opt/vault
+     environment:
+        SCONE_MODE: hw
+
+images:
+    - name: vault-init
+      injection_files:
+      - path: /opt/vault/resources/vault-init/ca.pem
+        content: $$SCONE::VAULT_CA:crt:pem$$
+      - path: /opt/vault/resources/vault-init/client.pem
+        content: $$SCONE::VAULT_INIT_CLIENT_CERT:crt:pem$$
+      - path: /opt/vault/resources/vault-init/client-key.pem
+        content: $$SCONE::VAULT_INIT_CLIENT_KEY:pkcs8:pem$$
+      - path: /opt/vault/resources/owner/conf/client-key.key
+        content: $$SCONE::config_private_key:pem$$
+      - path: /opt/vault/resources/owner/conf/client.crt
+        content: $$SCONE::config_cert:crt:pem$$
+      - path: /opt/vault/resources/vault-init/conf/client-key.key
+        content: $$SCONE::config_private_key:pem$$
+      - path: /opt/vault/resources/vault-init/conf/client.crt
+        content: $$SCONE::config_cert:crt:pem$$
+      - path: /opt/vault/resources/vault/conf/client-key.key
+        content: $$SCONE::config_private_key:pem$$
+      - path: /opt/vault/resources/vault/conf/client.crt
+        content: $$SCONE::config_cert:crt:pem$$
+      - path: /opt/vault/resources/vault-init/application.yaml
+        content: |
+          # CAS config
+          cas:
+              session_name: vault-init-auto-$OWNER_ID
+              export_to:
+                - session: bootstrap-$OWNER_ID
+                - namespace: owner-$OWNER_ID
+              url: https://$SCONE_CAS_ADDR:$CAS_CLIENT_PORT/session
+              key: /opt/vault/resources/vault-init/conf/client-key.key
+              certificate: /opt/vault/resources/vault-init/conf/client.crt
+              # Export client certificates to the target client sessions
+              ca_secret_name: "VAULT_CA"
+              session_file: /opt/vault/resources/vault-init/session_auto-gen.yml
+          # Vault config
+          vault_address: https://127.0.0.1:8200
+          check_interval: 15
+          shares:
+              recovery_shares: 1
+              recovery_threshold: 1
+              secret_shares: 1
+              secret_threshold: 1
+          gpgcrypto:
+              # GPG keys are injected from resources/vault-init/session_auto.yml, which imports
+              # them from resources/owner/session.yml.
+              - public_key_path: /opt/vault/resources/vault/keys/public.asc
+                private_key_path: /opt/vault/resources/vault/keys/private.asc
+                pass_phrase: "$$SCONE::pass_phrase_name$$"
+      - path: /opt/vault/resources/vault-init/session_register.yml
+        content: |
+          # NOTE: This is the main configuration file of vault-init.
+          cas_address: https://$SCONE_CAS_ADDR:$CAS_CLIENT_PORT/session
+          sessions:
+            - key: /opt/vault/resources/owner/conf/client-key.key
+              certificate: /opt/vault/resources/owner/conf/client.crt
+              session_file_loc: /opt/vault/resources/owner/session_bootstrap-gen.yml
+            - key: /opt/vault/resources/vault-init/conf/client-key.key
+              certificate: /opt/vault/resources/vault-init/conf/client.crt
+              session_file_loc: /opt/vault/resources/owner/namespace-gen.yml
+            - key: /opt/vault/resources/vault-init/conf/client-key.key
+              certificate: /opt/vault/resources/vault-init/conf/client.crt
+              session_file_loc: /opt/vault/resources/vault-init/session_auto-gen.yml
+            - key: /opt/vault/resources/vault/conf/client-key.key
+              certificate: /opt/vault/resources/vault/conf/client.crt
+              session_file_loc: /opt/vault/resources/vault/session-gen.yml
+      - path: /opt/vault/resources/owner/session_bootstrap-gen.yml
+        content: |
+          # NOTE: This session file will be updated by vault-init tool.
+          version: "0.3"
+          name: bootstrap-$OWNER_ID
+          access_policy:
+            create_sessions:
+              - $OWNER
+            read:
+              - $OWNER
+            update:
+              - $OWNER
+          services:
+          - name: bootstrap-enable-kv
+            mrenclaves:
+            - "$VAULT_DEFAULT_HEAP_MRENCLAVE"
+            command: /bin/vault secrets enable kv
+            image_name: bootstrap
+            pwd: /
+            environment:
+              SCONE_MODE: hw
+              SCONE_ALLOW_DLOPEN: 1
+              VAULT_TOKEN: $$SCONE::VAULT_TOKEN$$
+              VAULT_CACERT: "/opt/vault/ca.pem"
+              VAULT_CLIENT_CERT: "/opt/vault/client.pem"
+              VAULT_CLIENT_KEY: "/opt/vault/client-key.pem"
+              VAULT_SKIP_VERIFY: "true"
+              # VAULT_ADDR is retrieved from the host.
+              \@\@VAULT_ADDR: ""
+          - name: bootstrap-put-kv-secret
+            mrenclaves:
+            - "$VAULT_DEFAULT_HEAP_MRENCLAVE"
+            command: /bin/vault kv put kv/secret message=$$SCONE::SECRET$$
+            image_name: bootstrap
+            pwd: /
+            environment:
+              SCONE_MODE: hw
+              SCONE_ALLOW_DLOPEN: 1
+              VAULT_TOKEN: $$SCONE::VAULT_TOKEN$$
+              VAULT_CACERT: "/opt/vault/ca.pem"
+              VAULT_CLIENT_CERT: "/opt/vault/client.pem"
+              VAULT_CLIENT_KEY: "/opt/vault/client-key.pem"
+              VAULT_SKIP_VERIFY: "false"
+              # VAULT_ADDR is retrieved from the host.
+              \@\@VAULT_ADDR: ""
+          - name: bootstrap-write-policy
+            mrenclaves:
+            - "$VAULT_DEFAULT_HEAP_MRENCLAVE"
+            command: vault policy write myapp-kv-ro /opt/vault/policy.hcl
+            image_name: bootstrap
+            pwd: /
+            environment:
+              SCONE_MODE: hw
+              SCONE_ALLOW_DLOPEN: 1
+              VAULT_TOKEN: $$SCONE::VAULT_TOKEN$$
+              VAULT_CACERT: "/opt/vault/ca.pem"
+              VAULT_CLIENT_CERT: "/opt/vault/client.pem"
+              VAULT_CLIENT_KEY: "/opt/vault/client-key.pem"
+              VAULT_SKIP_VERIFY: "false"
+              # VAULT_ADDR is retrieved from the host.
+              \@\@VAULT_ADDR: ""
+          - name: bootstrap-enable-kubernetes
+            mrenclaves:
+            - "$VAULT_DEFAULT_HEAP_MRENCLAVE"
+            command: vault auth enable kubernetes
+            image_name: bootstrap
+            pwd: /
+            environment:
+              SCONE_MODE: hw
+              SCONE_ALLOW_DLOPEN: 1
+              VAULT_TOKEN: $$SCONE::VAULT_TOKEN$$
+              VAULT_CACERT: "/opt/vault/ca.pem"
+              VAULT_CLIENT_CERT: "/opt/vault/client.pem"
+              VAULT_CLIENT_KEY: "/opt/vault/client-key.pem"
+              VAULT_SKIP_VERIFY: "false"
+              # VAULT_ADDR is retrieved from the host.
+              \@\@VAULT_ADDR: ""
+          - name: bootstrap-config-kubernetes
+            mrenclaves:
+            - "$VAULT_DEFAULT_HEAP_MRENCLAVE"
+            command: vault write auth/kubernetes/config token_reviewer_jwt=$$SCONE::token_reviewer_jwt$$ kubernetes_host=$K8S_HOST issuer=https://kubernetes.default.svc.cluster.local kubernetes_ca_cert="$K8S_CA_CERT"
+            image_name: bootstrap
+            pwd: /
+            environment:
+              SCONE_MODE: hw
+              SCONE_ALLOW_DLOPEN: 1
+              VAULT_TOKEN: $$SCONE::VAULT_TOKEN$$
+              VAULT_CACERT: "/opt/vault/ca.pem"
+              VAULT_CLIENT_CERT: "/opt/vault/client.pem"
+              VAULT_CLIENT_KEY: "/opt/vault/client-key.pem"
+              VAULT_SKIP_VERIFY: "false"
+              # VAULT_ADDR is retrieved from the host.
+              \@\@VAULT_ADDR: ""
+          - name: bootstrap-bind-role
+            mrenclaves:
+            - "$VAULT_DEFAULT_HEAP_MRENCLAVE"
+            command: vault write auth/kubernetes/role/example bound_service_account_names=vault-auth bound_service_account_namespaces=default policies=myapp-kv-ro ttl=24h
+            image_name: bootstrap
+            pwd: /
+            environment:
+              SCONE_MODE: hw
+              SCONE_ALLOW_DLOPEN: 1
+              VAULT_TOKEN: $$SCONE::VAULT_TOKEN$$
+              VAULT_CACERT: "/opt/vault/ca.pem"
+              VAULT_CLIENT_CERT: "/opt/vault/client.pem"
+              VAULT_CLIENT_KEY: "/opt/vault/client-key.pem"
+              VAULT_SKIP_VERIFY: "false"
+              # VAULT_ADDR is retrieved from the host.
+              \@\@VAULT_ADDR: ""
+          security:
+            attestation:
+              tolerate:
+              - debug-mode
+              - outdated-tcb
+              - insecure-configuration
+              - hyperthreading
+              - software-hardening-needed
+              ignore_advisories: '*'
+
+          secrets:
+            - name: VAULT_TOKEN
+              import:
+                session: vault-init-auto-$OWNER_ID
+                secret: VAULT_TOKEN
+            - name: VAULT_CLIENT_CERT-bootstrap
+              kind: x509
+              private_key: VAULT_CLIENT_KEY-bootstrap
+              import:
+                session: vault-init-parent-$OWNER_ID
+                secret: VAULT_CLIENT_CERT-bootstrap
+            - name: VAULT_CLIENT_KEY-bootstrap
+              kind: private-key
+              import:
+                session: vault-init-parent-$OWNER_ID
+                secret: VAULT_CLIENT_KEY-bootstrap
+            - name: SECRET
+              kind: ascii
+              size: 16
+            - name: VAULT_CA
+              kind: x509-ca
+              import:
+                session: vault-init-parent-$OWNER_ID
+                secret: VAULT_CA
+            - name: token_reviewer_jwt
+              kind: ascii
+              value: $REVIEWER_JWT
+          images:
+            - name: bootstrap
+              injection_files:
+                - path: /opt/vault/client.pem
+                  content: $$SCONE::VAULT_CLIENT_CERT-bootstrap_crt$$
+                - path: /opt/vault/client-key.pem
+                  content: $$SCONE::VAULT_CLIENT_KEY-bootstrap_privatekey$$
+                - path: /opt/vault/ca.pem
+                  content: $$SCONE::VAULT_CA_crt$$
+                - path: /opt/vault/policy.hcl
+                  content: |
+                    path "kv/*" {
+                      capabilities = ["read", "update", "create", "delete", "list"]
+                    }
+      - path: /opt/vault/resources/owner/namespace-gen.yml
+        content: |
+          name: owner-$OWNER_ID
+          version: "0.3"
+
+          access_policy:
+            create_sessions:
+              - $OWNER
+            read:
+              - $OWNER
+            update:
+              - $OWNER
+      - path: /opt/vault/resources/vault-init/session_auto-gen.yml
+        content: |
+          version: "0.3.10"
+          name: vault-init-auto-$OWNER_ID
+          access_policy:
+            create_sessions:
+              - $OWNER
+              - CREATOR
+            read:
+              - $OWNER
+              - CREATOR
+            update:
+              - $OWNER
+              - CREATOR
+          services:
+            - name: dev
+              image_name: vault-init
+              mrenclaves: [$VAULTINIT_DEFAULT_HEAP_MRENCLAVE]
+              command: /usr/local/bin/vault-init auto
+              pwd: /opt/vault
+              environment:
+                  SCONE_MODE: hw
+          secrets:
+              - name: gpg_private_from_parent1
+                import:
+                  session: vault-init-parent-$OWNER_ID
+                  secret: gpg_private_key1
+              - name: VAULT_CA
+                kind: x509-ca
+                common_name: "vault-ca"
+                private_key: VAULT_CA_KEY
+                import:
+                  session: vault-init-parent-$OWNER_ID
+                  secret: VAULT_CA
+              - name: VAULT_CA_KEY
+                kind: private-key
+                import:
+                  session: vault-init-parent-$OWNER_ID
+                  secret: VAULT_CA_KEY
+              - name: VAULT_INIT_CLIENT_CERT
+                issuer: VAULT_CA
+                common_name: "vault-init-client"
+                private_key: VAULT_INIT_CLIENT_KEY
+                kind: x509
+                import:
+                  session: vault-init-parent-$OWNER_ID
+                  secret: VAULT_INIT_CLIENT_CERT
+              - name: VAULT_INIT_CLIENT_KEY
+                kind: private-key
+                import:
+                  session: vault-init-parent-$OWNER_ID
+                  secret: VAULT_INIT_CLIENT_KEY
+              - name: config_private_key
+                import:
+                  session: vault-init-parent-$OWNER_ID
+                  secret: config_private_key
+              - name: config_cert
+                import:
+                  session: vault-init-parent-$OWNER_ID
+                  secret: config_cert
+              - name: pass_phrase
+                import:
+                  session: vault-init-parent-$OWNER_ID
+                  secret: pass_phrase
+
+          images:
+              - name: vault-init
+                injection_files:
+                - path: /opt/vault/resources/vault-init/conf/client-key.key
+                  content: $$SCONE::config_private_key_pem$$
+                - path: /opt/vault/resources/vault-init/conf/client.crt
+                  content: $$SCONE::config_cert_crt$$
+                - path: /opt/vault/resources/vault-init/ca.pem
+                  content: $$SCONE::VAULT_CA_crt$$
+                - path: /opt/vault/resources/vault-init/client.pem
+                  content: $$SCONE::VAULT_INIT_CLIENT_CERT_crt$$
+                - path: /opt/vault/resources/vault-init/client-key.pem
+                  content: $$SCONE::VAULT_INIT_CLIENT_KEY_privatekey$$
+                - path: /opt/vault/resources/vault/keys/private.asc
+                  content: |
+                    $$SCONE::gpg_private_from_parent1_privatekey_base64$$
+                - path: /opt/vault/resources/vault/keys/public.asc
+                  content: |
+                    $$SCONE::gpg_private_from_parent1_publickey_base64$$
+                - path: /opt/vault/resources/vault-init/application.yaml
+                  content: |
+                    # CAS config
+                    cas:
+                        session_name: vault-init-auto-$OWNER_ID
+                        export_to:
+                          - session: bootstrap-$OWNER_ID
+                          - namespace: owner-$OWNER_ID
+                        url: https://$SCONE_CAS_ADDR:$CAS_CLIENT_PORT/session
+                        key: /opt/vault/resources/vault-init/conf/client-key.key
+                        certificate: /opt/vault/resources/vault-init/conf/client.crt
+                        # Export client certificates to the target client sessions
+                        ca_secret_name: "VAULT_CA"
+                        # NOTE: session_file with suffix -gen is generated by _update-sessions.sh auxiliary script.
+                        session_file: /opt/vault/resources/vault-init/session_auto-gen.yml
+                    # Vault config
+                    vault_address: https://127.0.0.1:8200
+                    check_interval: 15
+                    shares:
+                        recovery_shares: 1
+                        recovery_threshold: 1
+                        secret_shares: 1
+                        secret_threshold: 1
+                    gpgcrypto:
+                        # GPG keys are injected from resources/vault-init/session_auto.yml, which imports
+                        # them from resources/owner/session.yml.
+                        - public_key_path: /opt/vault/resources/vault/keys/public.asc
+                          private_key_path: /opt/vault/resources/vault/keys/private.asc
+                          pass_phrase: "$$SCONE::pass_phrase_name$$"
+
+          security:
+            attestation:
+              tolerate:
+              - debug-mode
+              - outdated-tcb
+              - insecure-configuration
+              - hyperthreading
+              - software-hardening-needed
+              ignore_advisories: '*'
+      - path: /opt/vault/resources/vault/session-gen.yml
+        content: |
+          version: "0.3"
+          name: vault-$OWNER_ID
+          access_policy:
+            create_sessions:
+              - $OWNER
+            read:
+              - $OWNER
+            update:
+              - $OWNER
+          services:
+          - name: dev
+            image_name: vault
+            mrenclaves:
+            - "$VAULT_DEFAULT_HEAP_MRENCLAVE"
+            - "$VAULT_1G_MRENCLAVE"
+            - "$VAULT_2G_MRENCLAVE"
+            - "$VAULT_8G_MRENCLAVE"
+            command: /bin/vault server -log-level=trace -config /opt/vault/resources/vault/config.hcl
+            pwd: /
+            environment:
+              SCONE_MODE: hw
+              SCONE_ALLOW_DLOPEN: 1
+
+          secrets:
+            - name: VAULT_CA
+              import:
+                session: vault-init-parent-$OWNER_ID
+                secret: VAULT_CA
+            - name: VAULT_CA_KEY
+              import:
+                session: vault-init-parent-$OWNER_ID
+                secret: VAULT_CA_KEY
+            - name: VAULT_SERVER_CERT
+              issuer: VAULT_CA
+              private_key: VAULT_SERVER_KEY
+              kind: x509
+              common_name: "vault"
+              endpoint: server
+              dns:
+                - "127.0.0.1"
+                - vault
+                - localhost
+                - $VAULT_NAME-0.$NAMESPACE.svc.cluster.local
+                - $VAULT_NAME-0.cluster.local
+            - name: VAULT_SERVER_KEY
+              kind: private-key
+              migrate: true
+            - name: encryption-key
+              key_type: RSA-2048
+              kind: private-key
+              migrate: true
+
+          images:
+            - name: vault
+              injection_files:
+                - path: /opt/vault/resources/vault/server.pem
+                  content: $$SCONE::VAULT_SERVER_CERT_crt$$
+                - path: /opt/vault/resources/vault/server-key.pem
+                  content: $$SCONE::VAULT_SERVER_CERT_privatekey$$
+                - path: /opt/vault/resources/vault/ca.pem
+                  content: $$SCONE::VAULT_CA_crt$$
+                - path: /opt/vault/resources/vault/config.hcl
+                  content: |
+                    storage "file" {
+                      path = "/mnt/vault/data"
+                    }
+                    listener "tcp" {
+                      address     = "0.0.0.0:8200"
+                      tls_cert_file = "/opt/vault/resources/vault/server.pem"
+                      tls_key_file = "/opt/vault/resources/vault/server-key.pem"
+                      tls_require_and_verify_client_cert = false
+                      tls_client_ca_file = "/opt/vault/resources/vault/ca.pem"
+                    }
+                    listener "tcp" {
+                      address     = "0.0.0.0:8300"
+                      tls_disable = "true"
+                    }
+                    seal "scone" {
+                      rsa_encryption_key = "/opt/vault/resources/vault-init/mykey.pem"
+                    }
+
+                    disable_mlock = true
+
+                    api_addr = "https://127.0.0.1:8200"
+                    cluster_addr = "https://127.0.0.1:8201"
+                    ui = true
+                    disable_clustering = true
+
+                - path: /opt/vault/resources/vault-init/mykey.pem
+                  content: $$SCONE::encryption-key_pem$$
+          security:
+            attestation:
+              tolerate:
+              - debug-mode
+              - outdated-tcb
+              - insecure-configuration
+              - hyperthreading
+              - software-hardening-needed
+              ignore_advisories: '*'
+
+secrets:
+  - name: gpg_private_key1
+    kind: pgp-key
+    export:
+    - session: vault-init-auto-$OWNER_ID
+    - session: owner-verify-$OWNER_ID
+  - name: VAULT_TOKEN
+    kind: ascii
+    value: "$$SCONE::VAULT_TOKEN$$"
+  - name: SECRET
+    kind: ascii
+    value: "$$SCONE::SECRET$$"
+  - name: token_reviewer_jwt
+    kind: ascii
+    value: "$$SCONE::token_reviewer_jwt$$"
+  - name: VAULT_CLIENT_CERT-bootstrap
+    kind: x509
+    issuer: VAULT_CA
+    common_name: "vault-init-client"
+    private_key: VAULT_CLIENT_KEY-bootstrap
+    export:
+    - session: bootstrap-$OWNER_ID
+  - name: VAULT_CLIENT_KEY-bootstrap
+    kind: private-key
+    migrate: true
+    export:
+    - session: bootstrap-${OWNER_ID}
+  - name: VAULT_CLIENT_CERT-bootstrap_crt
+    kind: ascii
+    value: "$$SCONE::VAULT_CLIENT_CERT-bootstrap:crt:pem$$"
+  - name: VAULT_CLIENT_KEY-bootstrap_privatekey
+    kind: ascii
+    value: "$$SCONE::VAULT_CLIENT_KEY-bootstrap:pkcs8:pem$$"
+  - name: VAULT_CA
+    kind: x509-ca
+    private_key: VAULT_CA_KEY
+    export_public: true # Allow the CA to be fetched via Values API.
+  - name: VAULT_CA_crt
+    kind: ascii
+    value: "$$SCONE::VAULT_CA:crt:pem$$"
+  - name: VAULT_CA_KEY
+    kind: private-key
+    migrate: true
+    export:
+    - session: vault-init-auto-$OWNER_ID
+    - session: vault-$OWNER_ID
+    - session: bootstrap-$OWNER_ID
+  - name: VAULT_INIT_CLIENT_CERT
+    issuer: VAULT_CA
+    common_name: "vault-init-client"
+    private_key: VAULT_INIT_CLIENT_KEY
+    kind: x509
+    export:
+    - session: vault-init-auto-$OWNER_ID
+  - name: VAULT_INIT_CLIENT_KEY
+    kind: private-key
+    migrate: true
+    export:
+    - session: vault-init-auto-$OWNER_ID
+  - name: VAULT_INIT_CLIENT_CERT_crt
+    kind: ascii
+    value: "$$SCONE::VAULT_INIT_CLIENT_CERT:crt:pem$$"
+  - name: VAULT_INIT_CLIENT_KEY_privatekey
+    kind: ascii
+    value: "$$SCONE::VAULT_INIT_CLIENT_KEY:pkcs8:pem$$"
+  - name: gpg_private_from_parent1_privatekey_base64
+    kind: ascii
+    value: "$$SCONE::gpg_private_from_parent1:privatekey:base64$$"
+  - name: gpg_private_from_parent1_publickey_base64
+    kind: ascii
+    value: "$$SCONE::gpg_private_from_parent1:publickey:base64$$"
+  - name: VAULT_SERVER_CERT_crt
+    kind: ascii
+    value: "$$SCONE::VAULT_SERVER_CERT:crt:pem$$"
+  - name: VAULT_SERVER_CERT_privatekey
+    kind: ascii
+    value: "$$SCONE::VAULT_SERVER_KEY:pkcs8:pem$$"
+  - name: VAULT_CLIENT_CERT-owner
+    kind: x509-ca
+    private_key: VAULT_CLIENT_KEY-owner
+    export:
+    - session: owner-$OWNER_ID/demo-client
+  - name: VAULT_CLIENT_KEY-owner
+    kind: private-key
+    migrate: true
+    export:
+    - session: owner-$OWNER_ID/demo-client
+  - name: VAULT_CLIENT_CERT-owner_crt
+    kind: ascii
+    value: "$$SCONE::VAULT_CLIENT_CERT-owner:crt:pem$$"
+  - name: VAULT_CLIENT_KEY-owner_privatekey
+    kind: ascii
+    value: "$$SCONE::VAULT_CLIENT_KEY-owner:pkcs8:pem$$"
+  - name: encryption-key_pem
+    kind: ascii
+    value: "$$SCONE::encryption-key:pem$$"
+  - name: config_private_key
+    kind: private-key
+    key_type: RSA-3072
+    migrate: true
+    export:
+    - session: vault-init-auto-$OWNER_ID
+    - session: owner-verify-$OWNER_ID
+  - name: config_cert
+    kind: x509
+    private_key: config_private_key
+    common_name: "config.json"    
+    dns:
+    - scone.cf
+    export:
+    - session: vault-init-auto-$OWNER_ID
+    - session: owner-verify-$OWNER_ID
+  - name: config_private_key_pem
+    kind: ascii
+    value: "$$SCONE::config_private_key:pem$$"
+  - name: config_cert_crt
+    kind: ascii
+    value: "$$SCONE::config_cert:crt:pem$$"
+  - name: pass_phrase
+    kind: binary
+    size: 16
+    export:
+    - session: vault-init-auto-$OWNER_ID
+    - session: owner-verify-$OWNER_ID
+  - name: pass_phrase_name
+    kind: ascii
+    value: "$$SCONE::pass_phrase:hex$$"
