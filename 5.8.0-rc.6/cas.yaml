@@ -21,7 +21,7 @@ spec:
   backup-controller:
     enabled: true
     session: "${POLICY_NAME}/register"
-    image: "${IMAGE_REPO}/backup-controller:5.8.0-rc.6"
+    image: "${IMAGE_REPO}/${IMAGE_PREFIX}backup-controller:5.8.0-rc.6"
   livenessProbe:
     enabled: true
 #    failureThreshold: 5

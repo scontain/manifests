@@ -4,7 +4,7 @@ metadata:
   name: sgxplugin
 spec:
   autoUpdate: true
-  image: "${IMAGE_REPO}/sgx-plugin:5.8.0-rc.6"
+  image: "${IMAGE_REPO}/${IMAGE_PREFIX}sgx-plugin:5.8.0-rc.6"
   imagePullSecrets:
    - name: scone-operator-pull
   imagePullPolicy: Always
