@@ -505,10 +505,11 @@ secrets:
   - name: VAULT_CLIENT_CERT-bootstrap
     kind: x509
     issuer: VAULT_CA
-    common_name: "vault-init-client"
+    common_name: VAULT_CLIENT_CERT-bootstrap
     private_key: VAULT_CLIENT_KEY-bootstrap
     export:
     - session: bootstrap-$OWNER_ID
+    endpoint: client
   - name: VAULT_CLIENT_KEY-bootstrap
     kind: private-key
     migrate: true
@@ -565,15 +566,18 @@ secrets:
     kind: ascii
     value: "$$SCONE::VAULT_SERVER_KEY:pkcs8:pem$$"
   - name: VAULT_CLIENT_CERT-owner
-    kind: x509-ca
+    kind: x509
     private_key: VAULT_CLIENT_KEY-owner
     export:
-    - session: owner-$OWNER_ID/demo-client
+    - namespace: owner-$OWNER_ID
+    issuer: VAULT_CA
+    common_name: VAULT_CLIENT_CERT-owner
+    endpoint: client
   - name: VAULT_CLIENT_KEY-owner
     kind: private-key
     migrate: true
     export:
-    - session: owner-$OWNER_ID/demo-client
+    - namespace: owner-$OWNER_ID
   - name: VAULT_CLIENT_CERT-owner_crt
     kind: ascii
     value: "$$SCONE::VAULT_CLIENT_CERT-owner:crt:pem$$"
