@@ -12,12 +12,11 @@ access_policy:
 security:
   attestation:
     tolerate:
-    - debug-mode
     - outdated-tcb
     - insecure-configuration
     - hyperthreading
     - software-hardening-needed
-    ignore_advisories: '*'
+    - insecure-igpu
 
 services:
    - name: dev
@@ -120,7 +119,7 @@ images:
               VAULT_CACERT: "/opt/vault/ca.pem"
               VAULT_CLIENT_CERT: "/opt/vault/client.pem"
               VAULT_CLIENT_KEY: "/opt/vault/client-key.pem"
-              VAULT_SKIP_VERIFY: "true"
+              VAULT_SKIP_VERIFY: "false"
               # VAULT_ADDR is retrieved from the host.
               \@\@VAULT_ADDR: ""
           - name: bootstrap-put-kv-secret
@@ -206,12 +205,11 @@ images:
           security:
             attestation:
               tolerate:
-              - debug-mode
               - outdated-tcb
               - insecure-configuration
               - hyperthreading
               - software-hardening-needed
-              ignore_advisories: '*'
+              - insecure-igpu
 
           secrets:
             - name: VAULT_TOKEN
@@ -383,12 +381,11 @@ images:
           security:
             attestation:
               tolerate:
-              - debug-mode
               - outdated-tcb
               - insecure-configuration
               - hyperthreading
               - software-hardening-needed
-              ignore_advisories: '*'
+              - insecure-igpu
       - path: /opt/vault/resources/vault/session-gen.yml
         content: |
           version: "0.3"
@@ -484,12 +481,11 @@ images:
           security:
             attestation:
               tolerate:
-              - debug-mode
               - outdated-tcb
               - insecure-configuration
               - hyperthreading
               - software-hardening-needed
-              ignore_advisories: '*'
+              - insecure-igpu
 
 secrets:
   - name: gpg_private_key1
