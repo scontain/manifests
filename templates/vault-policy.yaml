@@ -421,9 +421,13 @@ images:
               common_name: "vault"
               endpoint: server
               dns:
-                - "127.0.0.1"
                 - vault
                 - localhost
+                - $VAULT_NAME
+                - $VAULT_NAME.$NAMESPACE
+                - $VAULT_NAME.$NAMESPACE.svc
+                - $VAULT_NAME.$NAMESPACE.svc.cluster
+                - $VAULT_NAME.$NAMESPACE.svc.cluster.local
                 - $VAULT_NAME-0.$NAMESPACE.svc.cluster.local
                 - $VAULT_NAME-0.cluster.local
             - name: VAULT_SERVER_KEY
