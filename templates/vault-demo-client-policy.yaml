@@ -56,11 +56,11 @@ secrets:
   - name: VAULT_CLIENT_CERT-owner
     import:
       session: vault-init-parent-$OWNER_ID
-      secret: VAULT_CLIENT_CERT-owner
+      secret: VAULT_CLIENT_CERT-owner-$OWNER_ID
   - name: VAULT_CLIENT_KEY-owner
     import:
       session: vault-init-parent-$OWNER_ID
-      secret: VAULT_CLIENT_KEY-owner
+      secret: VAULT_CLIENT_KEY-owner-$OWNER_ID
   - name: VAULT_CA
     kind: x509-ca
     import:
