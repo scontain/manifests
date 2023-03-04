@@ -1,0 +1,46 @@
+name: scone-vault-image-mrenclaves-${OWNER_ID}
+version: 0.3.10
+predecessor: $PREDECESSOR
+
+access_policy:
+  read:
+    - $OWNER
+  update:
+    - $OWNER
+  create_sessions:
+    - $OWNER
+
+
+secrets:
+
+ - name: mrenclaves_bin_vault
+   kind: config-fragment
+   export_public: true
+   value:
+     mrenclave:
+       - $VAULT_DEFAULT_HEAP_MRENCLAVE
+       - $VAULT_1G_MRENCLAVE
+       - $VAULT_2G_MRENCLAVE
+       - $VAULT_3G_MRENCLAVE
+       - $VAULT_4G_MRENCLAVE
+       - $VAULT_5G_MRENCLAVE
+       - $VAULT_6G_MRENCLAVE
+       - $VAULT_7G_MRENCLAVE
+       - $VAULT_8G_MRENCLAVE
+
+
+ - name: mrenclaves_bin_vault-init
+   kind: config-fragment
+   export_public: true
+   value:
+     mrenclave:
+       - $VAULTINIT_DEFAULT_HEAP_MRENCLAVE
+       - $VAULTINIT_1G_MRENCLAVE
+       - $VAULTINIT_2G_MRENCLAVE
+       - $VAULTINIT_3G_MRENCLAVE
+       - $VAULTINIT_4G_MRENCLAVE
+       - $VAULTINIT_5G_MRENCLAVE
+       - $VAULTINIT_6G_MRENCLAVE
+       - $VAULTINIT_7G_MRENCLAVE
+       - $VAULTINIT_8G_MRENCLAVE
+
