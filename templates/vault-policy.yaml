@@ -21,7 +21,8 @@ security:
 services:
    - name: dev
      image_name: vault-init
-     mrenclaves: [$VAULTINIT_DEFAULT_HEAP_MRENCLAVE]
+     attestation:
+      - $$SCONE::mrenclaves_bin_vault-init$$
      command: /usr/local/bin/vault-init register /opt/vault/resources/vault-init/session_register.yml
      pwd: /opt/vault
      environment:
@@ -96,7 +97,7 @@ images:
       - path: /opt/vault/resources/owner/session_bootstrap-gen.yml
         content: |
           # NOTE: This session file will be updated by vault-init tool.
-          version: "0.3"
+          version: "0.3.10"
           name: bootstrap-$OWNER_ID
           access_policy:
             create_sessions:
@@ -107,8 +108,8 @@ images:
               - $OWNER
           services:
           - name: bootstrap-enable-kv
-            mrenclaves:
-            - "$VAULT_DEFAULT_HEAP_MRENCLAVE"
+            attestation:
+             - $$SCONE::mrenclaves_bin_vault_ascii$$
             command: /bin/vault secrets enable kv
             image_name: bootstrap
             pwd: /
@@ -122,8 +123,8 @@ images:
               VAULT_SKIP_VERIFY: "false"
               VAULT_ADDR: "$VAULT_ADDR"
           - name: bootstrap-put-kv-secret
-            mrenclaves:
-            - "$VAULT_DEFAULT_HEAP_MRENCLAVE"
+            attestation:
+             - $$SCONE::mrenclaves_bin_vault_ascii$$
             command: /bin/vault kv put kv/secret message=$$SCONE::SECRET$$
             image_name: bootstrap
             pwd: /
@@ -137,8 +138,8 @@ images:
               VAULT_SKIP_VERIFY: "false"
               VAULT_ADDR: "$VAULT_ADDR"
           - name: bootstrap-write-policy
-            mrenclaves:
-            - "$VAULT_DEFAULT_HEAP_MRENCLAVE"
+            attestation:
+             - $$SCONE::mrenclaves_bin_vault_ascii$$
             command: vault policy write myapp-kv-ro /opt/vault/policy.hcl
             image_name: bootstrap
             pwd: /
@@ -167,8 +168,8 @@ images:
               VAULT_SKIP_VERIFY: "false"
               VAULT_ADDR: "$VAULT_ADDR"
           - name: bootstrap-config-kubernetes
-            mrenclaves:
-            - "$VAULT_DEFAULT_HEAP_MRENCLAVE"
+            attestation:
+             - $$SCONE::mrenclaves_bin_vault_ascii$$
             command: vault write auth/kubernetes/config token_reviewer_jwt=$$SCONE::token_reviewer_jwt$$ kubernetes_host=$K8S_HOST issuer=https://kubernetes.default.svc.cluster.local kubernetes_ca_cert="$K8S_CA_CERT"
             image_name: bootstrap
             pwd: /
@@ -182,8 +183,8 @@ images:
               VAULT_SKIP_VERIFY: "false"
               VAULT_ADDR: "$VAULT_ADDR"
           - name: bootstrap-bind-role
-            mrenclaves:
-            - "$VAULT_DEFAULT_HEAP_MRENCLAVE"
+            attestation:
+             - $$SCONE::mrenclaves_bin_vault_ascii$$
             command: vault write auth/kubernetes/role/example bound_service_account_names=vault-auth bound_service_account_namespaces=default policies=myapp-kv-ro ttl=24h
             image_name: bootstrap
             pwd: /
@@ -206,6 +207,10 @@ images:
               - insecure-igpu
 
           secrets:
+            - name: mrenclaves_bin_vault
+              import:
+                session: scone-vault-image-mrenclaves-${OWNER_ID}
+                secret: mrenclaves_bin_vault
             - name: VAULT_TOKEN
               import:
                 session: vault-init-auto-$OWNER_ID
@@ -249,7 +254,7 @@ images:
       - path: /opt/vault/resources/owner/namespace-gen.yml
         content: |
           name: owner-$OWNER_ID
-          version: "0.3"
+          version: "0.3.10"
 
           access_policy:
             create_sessions:
@@ -275,12 +280,17 @@ images:
           services:
             - name: dev
               image_name: vault-init
-              mrenclaves: [$VAULTINIT_DEFAULT_HEAP_MRENCLAVE]
+              attestation:
+               - $$SCONE::mrenclaves_bin_vault-init_ascii$$
               command: /usr/local/bin/vault-init auto
               pwd: /opt/vault
               environment:
                   SCONE_MODE: hw
           secrets:
+              - name: mrenclaves_bin_vault-init
+                import:
+                  session: scone-vault-image-mrenclaves-${OWNER_ID}
+                  secret: mrenclaves_bin_vault-init
               - name: gpg_private_from_parent1
                 import:
                   session: vault-init-parent-$OWNER_ID
@@ -382,7 +392,7 @@ images:
               - insecure-igpu
       - path: /opt/vault/resources/vault/session-gen.yml
         content: |
-          version: "0.3"
+          version: "0.3.10"
           name: vault-$OWNER_ID
           access_policy:
             create_sessions:
@@ -394,11 +404,8 @@ images:
           services:
           - name: dev
             image_name: vault
-            mrenclaves:
-            - "$VAULT_DEFAULT_HEAP_MRENCLAVE"
-            - "$VAULT_1G_MRENCLAVE"
-            - "$VAULT_2G_MRENCLAVE"
-            - "$VAULT_8G_MRENCLAVE"
+            attestation:
+            - $$SCONE::mrenclaves_bin_vault_ascii$$
             command: /bin/vault server -log-level=trace -config /opt/vault/resources/vault/config.hcl
             pwd: /
             environment:
@@ -406,6 +413,10 @@ images:
               SCONE_ALLOW_DLOPEN: 1
 
           secrets:
+            - name: mrenclaves_bin_vault
+              import:
+                session: scone-vault-image-mrenclaves-${OWNER_ID}
+                secret: mrenclaves_bin_vault
             - name: VAULT_CA
               import:
                 session: vault-init-parent-$OWNER_ID
@@ -486,6 +497,16 @@ images:
               - insecure-igpu
 
 secrets:
+  - name: mrenclaves_bin_vault-init
+    import:
+      session: scone-vault-image-mrenclaves-${OWNER_ID}
+      secret: mrenclaves_bin_vault-init
+  - name: mrenclaves_bin_vault-init_ascii
+    kind: ascii
+    value: "$$SCONE::mrenclaves_bin_vault-init$$"
+  - name: mrenclaves_bin_vault_ascii
+    kind: ascii
+    value: "$$SCONE::mrenclaves_bin_vault$$"
   - name: gpg_private_key1
     kind: pgp-key
     export:
