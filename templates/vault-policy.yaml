@@ -153,8 +153,8 @@ images:
               VAULT_SKIP_VERIFY: "false"
               VAULT_ADDR: "$VAULT_ADDR"
           - name: bootstrap-enable-kubernetes
-            mrenclaves:
-            - "$VAULT_DEFAULT_HEAP_MRENCLAVE"
+            attestation:
+             - $$SCONE::mrenclaves_bin_vault_ascii$$
             command: vault auth enable kubernetes
             image_name: bootstrap
             pwd: /
