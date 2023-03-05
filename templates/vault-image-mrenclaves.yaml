@@ -1,4 +1,4 @@
-name: scone-vault-image-mrenclaves-${OWNER_ID}
+name: ${CAS_POLICY_NAMESPACE}scone-vault-image-mrenclaves-${OWNER_ID}
 version: 0.3.10
 predecessor: $PREDECESSOR
 
