@@ -1,0 +1,38 @@
+version: "0.3.10"
+name: owner-verify-$OWNER_ID
+
+security:
+  attestation:
+    tolerate:
+    - outdated-tcb
+    - insecure-configuration
+    - hyperthreading
+    - software-hardening-needed
+
+services:
+   - name: insecure
+     image_name: vault-statement-verifier
+     mrenclaves: [28c58f3e5a9f15dbf2a42f8ff144825196cf788812327fe5545c99f00b32abe0]
+     command: vault-statement-verifier -s @@2 -k /etc/privkey.asc -p $$SCONE::PASSPHRASE$$
+     pwd: /
+   - name: dev
+     image_name: vault-statement-verifier
+     mrenclaves: [28c58f3e5a9f15dbf2a42f8ff144825196cf788812327fe5545c99f00b32abe0]
+     command: vault-statement-verifier -s @@2 -k /etc/privkey.asc -p $$SCONE::PASSPHRASE$$ -omit-output
+     pwd: /
+
+images:
+    - name: vault-statement-verifier
+      injection_files:
+       - path: /etc/privkey.asc
+         content: |
+          $$SCONE::gpg_private_from_parent1:privatekey:base64$$
+
+secrets:
+    - name: PASSPHRASE
+      kind: ascii
+      value: ""
+    - name: gpg_private_from_parent1
+      import:
+        session: vault-init-parent-$OWNER_ID
+        secret: gpg_private_key1
