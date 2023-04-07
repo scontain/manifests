@@ -1,0 +1,14 @@
+apiVersion: base.scone.cloud/v1beta1
+kind: LAS
+metadata:
+  name: las
+spec:
+  autoUpdate: true
+  image: "${IMAGE_REPO}/${IMAGE_PREFIX}las:5.8.0-rc.16"
+  imagePullSecrets:
+   - name: scone-operator-pull
+  imagePullPolicy: Always
+  namespace: scone-system
+  podAnnotations:
+    scone-operator/inject-pull-secret:  "true"
+
