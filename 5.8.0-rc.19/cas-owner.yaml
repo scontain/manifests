@@ -1,0 +1,28 @@
+name: cas-owner
+version: "0.3.10"
+
+access_policy:
+      read:
+        - CREATOR
+      update:
+        - CREATOR
+
+secrets:
+  - name: access_policy
+    export:
+      - namespace: cas-owner
+    kind: config-fragment
+    value:
+      read:
+        - CREATOR
+      update:
+        - CREATOR
+  - name: security_policy
+    export:
+      - namespace: cas-owner
+      - session: cas-owner-owner-identity
+    kind: config-fragment
+    value:
+      attestation:
+        tolerate: [outdated-tcb, aepic-leak, insecure-configuration, hyperthreading, insecure-igpu, software-hardening-needed]
+        ignore_advisories: []
