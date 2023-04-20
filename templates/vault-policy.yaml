@@ -13,6 +13,7 @@ security:
   attestation:
     tolerate:
     - outdated-tcb
+    - aepic-leak
     - insecure-configuration
     - hyperthreading
     - software-hardening-needed
@@ -201,6 +202,7 @@ images:
             attestation:
               tolerate:
               - outdated-tcb
+              - aepic-leak
               - insecure-configuration
               - hyperthreading
               - software-hardening-needed
@@ -386,6 +388,7 @@ images:
             attestation:
               tolerate:
               - outdated-tcb
+              - aepic-leak
               - insecure-configuration
               - hyperthreading
               - software-hardening-needed
@@ -491,6 +494,7 @@ images:
             attestation:
               tolerate:
               - outdated-tcb
+              - aepic-leak
               - insecure-configuration
               - hyperthreading
               - software-hardening-needed
