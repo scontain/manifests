@@ -1,0 +1,104 @@
+version: "0.3.10"
+name: owner-$OWNER_ID/demo-client
+
+
+access_policy:
+  create_sessions:
+    - CREATOR
+  read:
+    - CREATOR
+  update:
+    - CREATOR
+
+services:
+  - name: get-kv-secret
+    attestation:
+    - $$SCONE::mrenclaves_bin_vault$$
+    command: /bin/vault kv get kv/secret
+    image_name: demo-client
+    pwd: /
+    environment:
+      SCONE_MODE: hw
+      VAULT_TOKEN: $$SCONE::VAULT_TOKEN$$
+      VAULT_CACERT: "/opt/vault/resources/demo-client/ca.pem"
+      VAULT_CLIENT_CERT: "/opt/vault/resources/demo-client/client.pem"
+      VAULT_CLIENT_KEY: "/opt/vault/resources/demo-client/client-key.pem"
+      VAULT_SKIP_VERIFY: "false"
+      VAULT_ADDR: "$VAULT_ADDR"
+  - name: confidential-agent
+    attestation:
+    - $$SCONE::mrenclaves_bin_vault$$
+    command: vault agent -config=/opt/vault/vault-agent-config.hcl
+    image_name: demo-client
+    pwd: /
+    environment:
+      SCONE_MODE: hw
+      VAULT_TOKEN: $$SCONE::VAULT_TOKEN$$
+      VAULT_CACERT: "/opt/vault/resources/demo-client/ca.pem"
+      VAULT_CLIENT_CERT: "/opt/vault/resources/demo-client/client.pem"
+      VAULT_CLIENT_KEY: "/opt/vault/resources/demo-client/client-key.pem"
+      VAULT_SKIP_VERIFY: "false"
+      VAULT_ADDR: "$VAULT_ADDR"
+
+security:
+  attestation:
+    tolerate:
+    - outdated-tcb
+    - aepic-leak
+    - insecure-configuration
+    - hyperthreading
+    - software-hardening-needed
+
+secrets:
+  - name: mrenclaves_bin_vault
+    import:
+      session: scone-vault-image-mrenclaves-${OWNER_ID}
+      secret: mrenclaves_bin_vault
+  - name: VAULT_TOKEN
+    import:
+      session: vault-init-auto-$OWNER_ID
+      secret: VAULT_TOKEN
+  - name: VAULT_CLIENT_CERT-owner
+    import:
+      session: vault-init-parent-$OWNER_ID
+      secret: VAULT_CLIENT_CERT-owner-$OWNER_ID
+  - name: VAULT_CLIENT_KEY-owner
+    import:
+      session: vault-init-parent-$OWNER_ID
+      secret: VAULT_CLIENT_KEY-owner-$OWNER_ID
+  - name: VAULT_CA
+    kind: x509-ca
+    import:
+      session: vault-init-parent-$OWNER_ID
+      secret: VAULT_CA
+
+images:
+  - name: demo-client
+    injection_files:
+      - path: /opt/vault/resources/demo-client/client.pem
+        content: $$SCONE::VAULT_CLIENT_CERT-owner:crt:pem$$
+      - path: /opt/vault/resources/demo-client/client-key.pem
+        content: $$SCONE::VAULT_CLIENT_KEY-owner:pkcs8:pem$$
+      - path: /opt/vault/resources/demo-client/ca.pem
+        content: $$SCONE::VAULT_CA:crt:pem$$
+      - path: /opt/vault/vault-agent-config.hcl
+        content: |
+          # Comment this out if running as sidecar instead of initContainer
+          exit_after_auth = true
+
+          pid_file = "/home/vault/pidfile"
+
+          auto_auth {
+              method "kubernetes" {
+                  mount_path = "auth/kubernetes"
+                  config = {
+                      role = "example"
+                  }
+              }
+
+              sink "file" {
+                  config = {
+                      path = "/tmp/vault/.vault-token"
+                  }
+              }
+          }
