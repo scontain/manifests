@@ -24,5 +24,5 @@ secrets:
     kind: config-fragment
     value:
       attestation:
-        tolerate: [outdated-tcb, insecure-configuration, hyperthreading, insecure-igpu, software-hardening-needed]
+        tolerate: [outdated-tcb, aepic-leak, insecure-configuration, hyperthreading, insecure-igpu, software-hardening-needed]
         ignore_advisories: []
