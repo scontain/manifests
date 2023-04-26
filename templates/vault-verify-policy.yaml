@@ -9,6 +9,7 @@ security:
     - insecure-configuration
     - hyperthreading
     - software-hardening-needed
+    ignore_advisories: "*"
 
 services:
    - name: insecure

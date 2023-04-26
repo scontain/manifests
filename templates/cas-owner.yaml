@@ -25,4 +25,4 @@ secrets:
     value:
       attestation:
         tolerate: [outdated-tcb, aepic-leak, insecure-configuration, hyperthreading, insecure-igpu, software-hardening-needed]
-        ignore_advisories: []
+        ignore_advisories: "*"
