@@ -14,7 +14,7 @@ services:
     attestation:
       mrenclave:
         - $SCONE_CLI_MRENCLAVE
-    command: "scone cas register-backup @@3"
+    command: "scone cas register-backup -SCG @@3"
     environment:
       SCONE_MODE: hw
       SCONE_LOG: error
@@ -28,7 +28,7 @@ services:
     attestation:
       mrenclave:
         - $SCONE_CLI_MRENCLAVE
-    command: "scone cas register-upgrade @@3"
+    command: "scone cas register-upgrade -SCG @@3"
     environment:
       SCONE_MODE: hw
       SCONE_LOG: error
