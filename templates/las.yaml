@@ -11,4 +11,4 @@ spec:
   namespace: scone-system
   podAnnotations:
     scone-operator/inject-pull-secret:  "true"
-
+  dcapKey: "${DCAP_KEY}"
