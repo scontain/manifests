@@ -14,6 +14,7 @@ spec:
     enabled: true
   databaseSnapshots:
     enabled: true
+    interval: 24h0m0s
     persistence:
       enabled: true
   podAnnotations:
