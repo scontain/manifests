@@ -1,0 +1,32 @@
+[
+	{
+		"op": "replace",
+		"path": "/spec/backup-controller/enabled",
+		"value": true,
+        },
+	{
+		"op": "replace",
+		"path": "/spec/backup-controller/session",
+		"value": "${POLICY_NAME}/register",
+	},
+	{
+		"op": "replace",
+		"path": "/spec/backup-controller/image",
+		"value": "${IMAGE_REPO}/${IMAGE_PREFIX}backup-controller:5.8.0-rc.22",
+	},
+	{
+		"op": "replace",
+		"path": "/spec/livenessProbe/enabled",
+		"value": true,
+	},
+	{
+		"op": "replace",
+		"path": "/spec/startupProbe/enabled",
+		"value": true,
+	},
+	{
+		"op": "replace",
+		"path": "/spec/attestedCLIProbes",
+		"value": false,
+	},
+]
