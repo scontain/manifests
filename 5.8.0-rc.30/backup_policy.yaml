@@ -1,0 +1,44 @@
+name: $POLICY_NAME
+version: "0.3.10"
+
+security:
+  attestation:
+    tolerate: [outdated-tcb, software-hardening-needed, insecure-configuration, insecure-igpu, aepic-leak]
+    ignore_advisories: "*"
+
+services:
+  - name: register
+    image_name: cli
+    # optional:
+    #$PLATFORM_IDS
+    attestation:
+      mrenclave:
+        - c0ec17bebb8dee952795cdbb52a63c9d0c7eb5a3fea362754835a5a695c70308
+    command: "scone cas register-backup -SCG @@3"
+    environment:
+      SCONE_MODE: hw
+      SCONE_LOG: error
+      SCONE_CLI_CONFIG: /etc/owner-identity.json
+      \@\@SCONE_LAS_ADDR: ""
+    pwd: /
+  - name: upgrade
+    image_name: cli
+    # optional:
+    #$PLATFORM_IDS
+    attestation:
+      mrenclave:
+        - c0ec17bebb8dee952795cdbb52a63c9d0c7eb5a3fea362754835a5a695c70308
+    command: "scone cas register-upgrade -SCG @@3"
+    environment:
+      SCONE_MODE: hw
+      SCONE_LOG: error
+      SCONE_CLI_CONFIG: /etc/owner-identity.json
+      \@\@SCONE_LAS_ADDR: ""
+    pwd: /
+
+images:
+  - name: cli
+    injection_files:
+      - path: /etc/owner-identity.json
+        content: |
+$OWNER_IDENTITY
