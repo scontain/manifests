@@ -1,0 +1,45 @@
+name: ${CAS_POLICY_NAMESPACE}scone-vault-image-mrenclaves-${OWNER_ID}
+version: 0.3.10
+predecessor: $PREDECESSOR
+
+access_policy:
+  read:
+    - $OWNER
+  update:
+    - $OWNER
+  create_sessions:
+    - $OWNER
+
+
+secrets:
+
+ - name: mrenclaves_bin_vault
+   kind: config-fragment
+   export_public: true
+   value:
+     mrenclave:
+       - f96ccc3432acfb0660fe702fe196709e7462f966629ac5fc5a0c28516fbf063a
+       - 99ddbc93e079ee44eb33c0f7b3f91338b312e118c1b95b8942b3fc8c47fd2cc0
+       - f96ccc3432acfb0660fe702fe196709e7462f966629ac5fc5a0c28516fbf063a
+       - 4a3413e9c1c88188e94d01b7442312e75d97efb33914c6a324c63cc3d7259e3e
+       - 10c87617c3812c46a2237281b4006b58f26ea237a9fd77b231a8a5e86e18d462
+       - e7a4fa93e9b3999dc7116e70249476dc34cc441335ed4a65eaa1ec35ae905f63
+       - a969cd684341f2e373e54bf6faaa95412871169e3cf595cbb697889039ce59a1
+       - 9df2caa74562babd9a6566e029691edb45e0109c28849a7e776dbf18d4004341
+       - 2d8db7c1947ff986302936839cb9ea1795d01e65b6b67e88b6523db55401c38f
+
+
+ - name: mrenclaves_bin_vault-init
+   kind: config-fragment
+   export_public: true
+   value:
+     mrenclave:
+       - 8890309d5516b4914e203926542b4383e0c5b55be78be1bc6e21ab0c7ddf1210
+       - aa19dc5e4b345a7f2f62ae0f8dbc0d18c9a1952ac4d30e9e791e3e86652f634c
+       - 8890309d5516b4914e203926542b4383e0c5b55be78be1bc6e21ab0c7ddf1210
+       - f7e0758921a0a21971ee16017d95978afd64104a3bc41ef31bc7517ac52777b5
+       - 1faec70b475836b1ff50fb8926c3f92b3cfd3425c08bd9dcd03b073f6977f2e0
+       - a64bb2b116712a2ddaf1f8b65e589aa2c827ef7a2dfa412521fc6fe1cdef2d87
+       - 12646e0586c67021a442c8d884b73262d0505d548965873d4b41897af72ce383
+       - c44ef5672629fbb7d05e1c7a63342aef231f4260b4a9969e41f514ced6cd49bb
+       - d652b2c2f068686eb722cf7c3bebd0ce453caba7a5090c426bf07461a81da14d
