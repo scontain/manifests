@@ -14,6 +14,8 @@ services:
     attestation:
       mrenclave:
         - d8874364077b6d0bdf60b98934fa711aaf66d99b84eac455437cf61216ddd05b
+        - 5c81a5137abc6a1f757a4a6fb4cb25edcde92943a7471ca36bcfd759b787bd13
+        - 3936312ca5612e8dff56a822d4b43d150add5a29844b9e5f490b1bb13168ab7b
     command: "scone cas register-backup -SCG @@3"
     environment:
       SCONE_MODE: hw
@@ -28,6 +30,8 @@ services:
     attestation:
       mrenclave:
         - d8874364077b6d0bdf60b98934fa711aaf66d99b84eac455437cf61216ddd05b
+        - 5c81a5137abc6a1f757a4a6fb4cb25edcde92943a7471ca36bcfd759b787bd13
+        - 3936312ca5612e8dff56a822d4b43d150add5a29844b9e5f490b1bb13168ab7b
     command: "scone cas register-upgrade -SCG @@3"
     environment:
       SCONE_MODE: hw
