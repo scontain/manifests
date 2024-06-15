@@ -21,3 +21,5 @@ spec:
     sconeapps/inject-pull-secret:  "true"
   backup-controller:
     enabled: false
+  nodeSelector:
+    las.scontain.com/ok: "true"

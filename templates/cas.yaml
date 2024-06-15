@@ -38,3 +38,5 @@ spec:
   attestedCLIProbes: false
   networkPolicy:
     enabled: false
+  nodeSelector:
+    las.scontain.com/ok: "true"
