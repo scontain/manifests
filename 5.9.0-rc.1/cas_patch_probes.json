@@ -1,0 +1,17 @@
+[
+	{
+		"op": "replace",
+		"path": "/spec/livenessProbe/enabled",
+		"value": true,
+	},
+	{
+		"op": "replace",
+		"path": "/spec/startupProbe/enabled",
+		"value": true,
+	},
+	{
+		"op": "replace",
+		"path": "/spec/attestedCLIProbes",
+		"value": false,
+	},
+]
