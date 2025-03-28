@@ -7,7 +7,7 @@
 	{
 		"op": "replace",
 		"path": "/spec/livenessProbe/periodSeconds",
-		"value": 120,
+		"value": 60,
 	},
 	{
 		"op": "replace",
@@ -32,12 +32,12 @@
 	{
 		"op": "replace",
 		"path": "/spec/startupProbe/periodSeconds",
-		"value": 120,
+		"value": 60,
 	},
 	{
 		"op": "replace",
 		"path": "/spec/startupProbe/initialDelaySeconds",
-		"value": 180,
+		"value": 60,
 	},
 	{
 		"op": "replace",
@@ -47,7 +47,7 @@
 	{
 		"op": "replace",
 		"path": "/spec/startupProbe/failureThreshold",
-		"value": 5,
+		"value": 15,
 	},
 	{
 		"op": "replace",
