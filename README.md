@@ -27,9 +27,6 @@ Our `kubectl` plugin (aka [`kubectl provision`](https://sconedocs.github.io/5_ku
 - `${POLICY_NAME}`: The associated SCONE CAS policy.
 - `${SCONE_CAS_ADDR}`: The name of the CAS instance that stores the policy.
 - `${SCONE_CLI_MRENCLAVE}`: is replaced by the MrEnclave of the SCONE CLI.
-- `$VAULT_IMAGE_REPO`: the image name of Vault. The default is `"$IMAGE_REPO/${IMAGE_PREFIX}vault"`
-- `$VAULT_NAME`: the name of the vault custom resource. Example: `vault`,
-- `$VAULT_VERIFIER_IMAGE`: the name of the vault init statement verifier, i.e., the entity that checks that Vault was properly set up. The default is: `"$IMAGE_REPO/${IMAGE_PREFIX}vault-statement-verifier"`
 - `${VERSION}`: the version of SCONE. Example: `5.8.0`
 
 Note that you can use both `$VARIABLE` as well as `${VARIABLE}`. The latter is typically used to separate the `VARIABLE` name from whatever text might follow.
