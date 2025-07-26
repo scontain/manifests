@@ -1,0 +1,72 @@
+[
+	{
+		"op": "replace",
+		"path": "/spec/backup-controller/enabled",
+		"value": true,
+        },
+	{
+		"op": "replace",
+		"path": "/spec/backup-controller/session",
+		"value": "${POLICY_NAME}/register",
+	},
+	{
+		"op": "replace",
+		"path": "/spec/backup-controller/image",
+		"value": "${IMAGE_REPO}/${IMAGE_PREFIX}backup-controller:6.0.0-rc.1",
+	},
+	{
+		"op": "replace",
+		"path": "/spec/livenessProbe/enabled",
+		"value": true,
+	},
+	{
+		"op": "replace",
+		"path": "/spec/livenessProbe/periodSeconds",
+		"value": 60,
+	},
+	{
+		"op": "replace",
+		"path": "/spec/livenessProbe/initialDelaySeconds",
+		"value": 3,
+	},
+	{
+		"op": "replace",
+		"path": "/spec/livenessProbe/timeoutSeconds",
+		"value": 60,
+	},
+	{
+		"op": "replace",
+		"path": "/spec/livenessProbe/failureThreshold",
+		"value": 5,
+	},
+	{
+		"op": "replace",
+		"path": "/spec/startupProbe/enabled",
+		"value": true,
+	},
+	{
+		"op": "replace",
+		"path": "/spec/startupProbe/periodSeconds",
+		"value": 60,
+	},
+	{
+		"op": "replace",
+		"path": "/spec/startupProbe/initialDelaySeconds",
+		"value": 60,
+	},
+	{
+		"op": "replace",
+		"path": "/spec/startupProbe/timeoutSeconds",
+		"value": 60,
+	},
+	{
+		"op": "replace",
+		"path": "/spec/startupProbe/failureThreshold",
+		"value": 15,
+	},
+	{
+		"op": "replace",
+		"path": "/spec/attestedCLIProbes",
+		"value": false,
+	},
+]
