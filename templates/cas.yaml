@@ -21,7 +21,7 @@ spec:
     sconeapps/inject-pull-secret:  "true"
   backup-controller:
     enabled: true
-    session: "${POLICY_NAME}/register"
+    session: "${POLICY_NAME}/upgrade"
     image: "${IMAGE_REPO}/${IMAGE_PREFIX}backup-controller:${VERSION}"
   livenessProbe:
     enabled: true
