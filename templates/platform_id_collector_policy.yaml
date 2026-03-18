@@ -1,0 +1,95 @@
+name: platform_id_collector
+version: "0.3.10"
+
+
+security:
+  attestation:
+    mode: none
+    # tolerate: [outdated-tcb, software-hardening-needed, insecure-configuration, insecure-igpu, aepic-leak]
+    # ignore_advisories: "*"
+
+
+services:
+  - name: launcher
+    # image_name: cli
+    # attestation:
+    #   mrenclave:
+    #     - $PLATFORM_ID_COLLECTOR_MRENCLAVE
+    command: "platform-id-collector launch"
+    environment:
+      SCONE_LOG: error
+      SCONE_CLI_CONFIG: /etc/owner-identity.json
+      \@\@PLATFORM_ID_COLLECTOR_IMAGE: ""
+      \@\@COLLECTOR_POD_NAMESPACE: ""
+      \@\@CAS_NAME: ""
+      \@\@CAS_CLIENT_PORT: ""
+      \@\@CAS_ENCLAVE_PORT: ""
+      \@\@VERSION: ""
+      \@\@KUBERNETES_SERVICE_HOST: ""
+      \@\@KUBERNETES_SERVICE_PORT: ""
+
+      SCONE_NETWORK_SHIELD_CLIENT_PRIMARY: protected
+      SCONE_NETWORK_SHIELD_CLIENT_PRIMARY_DESTINATION: "TCP:collector:8080"
+      SCONE_NETWORK_SHIELD_CLIENT_PRIMARY_DESTINATION_IP: "*"
+      SCONE_NETWORK_SHIELD_CLIENT_PRIMARY_IDENTITY: $$SCONE::LAUNCHER_CERT$$$$SCONE::LAUNCHER_CERT:privatekey$$
+      SCONE_NETWORK_SHIELD_CLIENT_PRIMARY_SERVER_AUTH: $$SCONE::PLATFORM_ID_COLLECTOR_CA_CERT$$
+    pwd: /
+
+  - name: collector
+    # image_name: cli
+    # attestation:
+      # mrenclave:
+      #   - $PLATFORM_ID_COLLECTOR_MRENCLAVE
+    command: "platform-id-collector collect"
+    environment:
+      SCONE_PLATFORM_ID_VALUE: "fake_qe_id_for_node_from_collector_policy"
+
+      SCONE_NETWORK_SHIELD: protected
+      SCONE_NETWORK_SHIELD_UNSUPPORTED_PROTOCOLS: refuse # allow dns?
+      SCONE_NETWORK_SHIELD_SERVER_COLLECTOR: protected
+      SCONE_NETWORK_SHIELD_SERVER_COLLECTOR_PORT: "TCP:8080"
+      SCONE_NETWORK_SHIELD_SERVER_COLLECTOR_IDENTITY: $$SCONE::COLLECTOR_CERT$$$$SCONE::COLLECTOR_CERT:privatekey$$
+      SCONE_NETWORK_SHIELD_SERVER_COLLECTOR_CLIENT_AUTH: $$SCONE::PLATFORM_ID_COLLECTOR_CA_CERT$$
+    pwd: /
+
+
+secrets:
+  - name: PLATFORM_ID_COLLECTOR_CA_KEY
+    kind: private-key
+    migrate: true
+
+  - name: PLATFORM_ID_COLLECTOR_CA_CERT
+    kind: x509-ca
+    common_name: PLATFORM_ID_COLLECTOR_CA
+    private_key: PLATFORM_ID_COLLECTOR_CA_KEY
+
+  - name: LAUNCHER_KEY
+    kind: private-key
+    migrate: true
+
+  - name: LAUNCHER_CERT
+    kind: x509
+    private_key: LAUNCHER_KEY
+    issuer: PLATFORM_ID_COLLECTOR_CA_CERT
+    common_name: launcher
+    dns:
+      - launcher
+
+  - name: COLLECTOR_KEY
+    kind: private-key
+    migrate: true
+
+  - name: COLLECTOR_CERT
+    kind: x509
+    private_key: COLLECTOR_KEY
+    issuer: PLATFORM_ID_COLLECTOR_CA_CERT
+    common_name: collector
+    dns:
+      - collector
+
+
+# images:
+#   - name: cli
+#     injection_files:
+#       - path: /etc/owner-identity.json
+#         content: "deadbeef"
