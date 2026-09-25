@@ -1,0 +1,99 @@
+name: $PLATFORM_ID_COLLECTOR_POLICY_NAME
+version: "0.3.10"
+
+
+security:
+  attestation:
+    tolerate: [outdated-tcb, software-hardening-needed, insecure-configuration, insecure-igpu, aepic-leak]
+    ignore_advisories: "*"
+
+
+services:
+  # Platform ID Collector expects launcher service name.
+  - name: launcher
+    image_name: launcher_image
+    attestation:
+      mrenclave:
+        - $PLATFORM_ID_COLLECTOR_MRENCLAVE
+    command: "platform-id-collector launch"
+    environment:
+      PLATFORM_ID_COLLECTOR_POLICY_NAME: $PLATFORM_ID_COLLECTOR_POLICY_NAME
+      SCONE_CAS_API_CERT: $$SCONE::cas::api-certificate$$
+      SCONE_LOG: error
+      CAS_OWNER_IDENTITY_FILE_PATH: /owner-identity.json
+
+      \@\@PLATFORM_ID_COLLECTOR_IMAGE: ""
+      \@\@COLLECTOR_POD_NAMESPACE: ""
+      \@\@CAS_NAME: ""
+      \@\@CAS_CLIENT_PORT: ""
+      \@\@CAS_ENCLAVE_PORT: ""
+      \@\@VERSION: ""
+      \@\@KUBERNETES_SERVICE_HOST: ""
+      \@\@KUBERNETES_SERVICE_PORT: ""
+
+      SCONE_NETWORK_SHIELD_CLIENT_PRIMARY: protected
+      SCONE_NETWORK_SHIELD_CLIENT_PRIMARY_DESTINATION: "TCP:collector:8080"
+      SCONE_NETWORK_SHIELD_CLIENT_PRIMARY_DESTINATION_IP: "*"
+      SCONE_NETWORK_SHIELD_CLIENT_PRIMARY_IDENTITY: $$SCONE::LAUNCHER_CERT$$$$SCONE::LAUNCHER_CERT:privatekey$$
+      SCONE_NETWORK_SHIELD_CLIENT_PRIMARY_SERVER_AUTH: $$SCONE::PLATFORM_ID_COLLECTOR_CA_CERT$$
+    pwd: /
+
+  # Platform ID Collector expects collector service name.
+  - name: collector
+    attestation:
+      mrenclave:
+        - $PLATFORM_ID_COLLECTOR_MRENCLAVE
+    command: "platform-id-collector collect"
+    environment:
+      SCONE_SGX_HEADER_USER_DATA: $$SCONE::self::sgx.header.user_data$$
+      SCONE_TEE: $$SCONE::self::tee$$
+
+      SCONE_NETWORK_SHIELD: protected
+      SCONE_NETWORK_SHIELD_UNSUPPORTED_PROTOCOLS: refuse
+      SCONE_NETWORK_SHIELD_SERVER_COLLECTOR: protected
+      SCONE_NETWORK_SHIELD_SERVER_COLLECTOR_PORT: "TCP:8080"
+      SCONE_NETWORK_SHIELD_SERVER_COLLECTOR_IDENTITY: $$SCONE::COLLECTOR_CERT$$$$SCONE::COLLECTOR_CERT:privatekey$$
+      SCONE_NETWORK_SHIELD_SERVER_COLLECTOR_CLIENT_AUTH: $$SCONE::PLATFORM_ID_COLLECTOR_CA_CERT$$
+    pwd: /
+
+
+secrets:
+  - name: PLATFORM_ID_COLLECTOR_CA_KEY
+    kind: private-key
+    migrate: true
+
+  - name: PLATFORM_ID_COLLECTOR_CA_CERT
+    kind: x509-ca
+    common_name: PLATFORM_ID_COLLECTOR_CA
+    private_key: PLATFORM_ID_COLLECTOR_CA_KEY
+
+  - name: LAUNCHER_KEY
+    kind: private-key
+    migrate: true
+
+  - name: LAUNCHER_CERT
+    kind: x509
+    private_key: LAUNCHER_KEY
+    issuer: PLATFORM_ID_COLLECTOR_CA_CERT
+    common_name: launcher
+    dns:
+      - launcher
+
+  - name: COLLECTOR_KEY
+    kind: private-key
+    migrate: true
+
+  - name: COLLECTOR_CERT
+    kind: x509
+    private_key: COLLECTOR_KEY
+    issuer: PLATFORM_ID_COLLECTOR_CA_CERT
+    common_name: collector
+    dns:
+      - collector
+
+images:
+  - name: launcher_image
+    injection_files:
+      - path: /owner-identity.json
+        content: |
+$OWNER_IDENTITY
