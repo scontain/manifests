@@ -1,5 +1,5 @@
 name: $POLICY_NAME
-version: "0.3.10"
+version: "0.3.13"
 
 security:
   attestation:
@@ -12,8 +12,10 @@ services:
     # optional:
     #$PLATFORM_IDS
     attestation:
-      mrenclave:
-        - $SCONE_CLI_MRENCLAVE
+      - signer:
+          mrsigner: $SCONE_CLI_MRSIGNER
+          isvprodid: $SCONE_CLI_ISVPRODID
+          isvsvn_min: $SCONE_CLI_ISVSVN
     command: "scone cas register-backup -SCG @@3"
     environment:
       SCONE_MODE: hw
@@ -26,8 +28,10 @@ services:
     # optional:
     #$PLATFORM_IDS
     attestation:
-      mrenclave:
-        - $SCONE_CLI_MRENCLAVE
+      - signer:
+          mrsigner: $SCONE_CLI_MRSIGNER
+          isvprodid: $SCONE_CLI_ISVPRODID
+          isvsvn_min: $SCONE_CLI_ISVSVN
     command: "scone cas register-upgrade -SCG @@3"
     environment:
       SCONE_MODE: hw
