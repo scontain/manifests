@@ -1,0 +1,189 @@
+images:
+  "registry.scontain.com/scone.cloud/sconify-image:6.0.9":
+    rust-cli:
+      non_edmm_mrenclave: 8b84c5cd75b7a4d2290a6a1bc5493eb76df29e919736976fbddb1e0c8316015d
+      mrenclave: 51c5b1f0c669c39c6dce436b8df759a4f45c8075b270f76353f6addfb052ad4c
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 49300
+      isvsvn: 5
+      path: "/opt/scone/bin/rust-cli"
+  "registry.scontain.com/scone.cloud/sconify_image:6.0.9":
+    rust-cli:
+      non_edmm_mrenclave: 8b84c5cd75b7a4d2290a6a1bc5493eb76df29e919736976fbddb1e0c8316015d
+      mrenclave: 51c5b1f0c669c39c6dce436b8df759a4f45c8075b270f76353f6addfb052ad4c
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 49300
+      isvsvn: 5
+      path: "/opt/scone/bin/rust-cli"
+  "registry.scontain.com/scone.cloud/show-tcb-state:6.0.9":
+    rust-cli:
+      non_edmm_mrenclave: 8b84c5cd75b7a4d2290a6a1bc5493eb76df29e919736976fbddb1e0c8316015d
+      mrenclave: 51c5b1f0c669c39c6dce436b8df759a4f45c8075b270f76353f6addfb052ad4c
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 49300
+      isvsvn: 5
+      path: "/opt/scone/bin/rust-cli"
+  "registry.scontain.com/scone.cloud/python-3.12-ubuntu24.04:6.0.9":
+    rust-cli:
+      non_edmm_mrenclave: 8b84c5cd75b7a4d2290a6a1bc5493eb76df29e919736976fbddb1e0c8316015d
+      mrenclave: 51c5b1f0c669c39c6dce436b8df759a4f45c8075b270f76353f6addfb052ad4c
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 49300
+      isvsvn: 5
+      path: "/opt/scone/bin/rust-cli"
+    python3.12:
+      non_edmm_mrenclave: 993a1bc476f96720c94708952bcb0d2f131fa67a5c53b7b64c28612a3eb46998
+      mrenclave: 22c28c3284db1004f1d6cb6d3e1e34147edaa2fda5129ade0e08177bb958bb47
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 50001
+      isvsvn: 1
+      path: "/usr/bin/python3.12"
+  "registry.scontain.com/scone.cloud/cas:6.0.9":
+    rust-cli:
+      non_edmm_mrenclave: 8b84c5cd75b7a4d2290a6a1bc5493eb76df29e919736976fbddb1e0c8316015d
+      mrenclave: 51c5b1f0c669c39c6dce436b8df759a4f45c8075b270f76353f6addfb052ad4c
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 49300
+      isvsvn: 5
+      path: "/opt/scone/bin/rust-cli"
+    cas:
+      non_edmm_mrenclave: a5fc98774b701d7457bae41bdf4e2d6af8ef0932f1267dc9c940b92fe048ad8f
+      mrenclave: e4c519a6acb053bc1fc79574e2d063d67bd4eb9ea07fad2319c5a0b47524365c
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 41316
+      isvsvn: 5
+      path: "/usr/local/bin/cas"
+  "registry.scontain.com/scone.cloud/cas-preprovisioned:6.0.9":
+    rust-cli:
+      non_edmm_mrenclave: 8b84c5cd75b7a4d2290a6a1bc5493eb76df29e919736976fbddb1e0c8316015d
+      mrenclave: 51c5b1f0c669c39c6dce436b8df759a4f45c8075b270f76353f6addfb052ad4c
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 49300
+      isvsvn: 5
+      path: "/opt/scone/bin/rust-cli"
+    cas:
+      non_edmm_mrenclave: a5fc98774b701d7457bae41bdf4e2d6af8ef0932f1267dc9c940b92fe048ad8f
+      mrenclave: e4c519a6acb053bc1fc79574e2d063d67bd4eb9ea07fad2319c5a0b47524365c
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 41316
+      isvsvn: 5
+      path: "/usr/local/bin/cas"
+  "registry.scontain.com/scone.cloud/crosscompilers-ubuntu:6.0.9":
+    rust-cli:
+      non_edmm_mrenclave: 8b84c5cd75b7a4d2290a6a1bc5493eb76df29e919736976fbddb1e0c8316015d
+      mrenclave: 51c5b1f0c669c39c6dce436b8df759a4f45c8075b270f76353f6addfb052ad4c
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 49300
+      isvsvn: 5
+      path: "/opt/scone/bin/rust-cli"
+  "registry.scontain.com/scone.cloud/runtime-ubuntu24.04:6.0.9":
+    rust-cli:
+      non_edmm_mrenclave: 8b84c5cd75b7a4d2290a6a1bc5493eb76df29e919736976fbddb1e0c8316015d
+      mrenclave: 51c5b1f0c669c39c6dce436b8df759a4f45c8075b270f76353f6addfb052ad4c
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 49300
+      isvsvn: 5
+      path: "/opt/scone/bin/rust-cli"
+  "registry.scontain.com/scone.cloud/crosscompilers:6.0.9":
+    rust-cli:
+      non_edmm_mrenclave: 8b84c5cd75b7a4d2290a6a1bc5493eb76df29e919736976fbddb1e0c8316015d
+      mrenclave: 51c5b1f0c669c39c6dce436b8df759a4f45c8075b270f76353f6addfb052ad4c
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 49300
+      isvsvn: 5
+      path: "/opt/scone/bin/rust-cli"
+  "registry.scontain.com/scone.cloud/sconecli:6.0.9":
+    rust-cli:
+      non_edmm_mrenclave: 8b84c5cd75b7a4d2290a6a1bc5493eb76df29e919736976fbddb1e0c8316015d
+      mrenclave: 51c5b1f0c669c39c6dce436b8df759a4f45c8075b270f76353f6addfb052ad4c
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 49300
+      isvsvn: 5
+      path: "/opt/scone/bin/rust-cli"
+  "registry.scontain.com/scone.cloud/sconecli-ubuntu:6.0.9":
+    rust-cli:
+      non_edmm_mrenclave: 8b84c5cd75b7a4d2290a6a1bc5493eb76df29e919736976fbddb1e0c8316015d
+      mrenclave: 51c5b1f0c669c39c6dce436b8df759a4f45c8075b270f76353f6addfb052ad4c
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 49300
+      isvsvn: 5
+      path: "/opt/scone/bin/rust-cli"
+  "registry.scontain.com/scone.cloud/cas-recovery:6.0.9":
+    rust-cli:
+      non_edmm_mrenclave: 8b84c5cd75b7a4d2290a6a1bc5493eb76df29e919736976fbddb1e0c8316015d
+      mrenclave: 51c5b1f0c669c39c6dce436b8df759a4f45c8075b270f76353f6addfb052ad4c
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 49300
+      isvsvn: 5
+      path: "/opt/scone/bin/rust-cli"
+    cas:
+      non_edmm_mrenclave: a5fc98774b701d7457bae41bdf4e2d6af8ef0932f1267dc9c940b92fe048ad8f
+      mrenclave: e4c519a6acb053bc1fc79574e2d063d67bd4eb9ea07fad2319c5a0b47524365c
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 41316
+      isvsvn: 5
+      path: "/usr/local/bin/cas"
+  "registry.scontain.com/scone.cloud/backup-controller:6.0.9":
+    rust-cli:
+      non_edmm_mrenclave: 8b84c5cd75b7a4d2290a6a1bc5493eb76df29e919736976fbddb1e0c8316015d
+      mrenclave: 51c5b1f0c669c39c6dce436b8df759a4f45c8075b270f76353f6addfb052ad4c
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 49300
+      isvsvn: 5
+      path: "/opt/scone/bin/rust-cli"
+  "registry.scontain.com/scone.cloud/nginx-alpine-binary-fs:6.0.9":
+    nginx:
+      non_edmm_mrenclave: 5797e2c66e289e9ac06742f2ef8073055752fa801df5a595d20fbc7c183bb31f
+      mrenclave: 1cd411072bc8d997fc0767a1f53cb4cc50d177a9ed3aea9f7ff909db39a0978a
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 50007
+      isvsvn: 1
+      path: "/usr/sbin/nginx"
+  "registry.scontain.com/scone.cloud/redis-6-alpine:6.0.9":
+    redis-server:
+      non_edmm_mrenclave: 028cb524555b542fff41787bfee86d53870a89b642b1c0aabcc5d36ecb7e345e
+      mrenclave: e760660266fafb241cacbdbc7251289eaff76a4dbac8a83442b25dd86c889485
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 50008
+      isvsvn: 1
+      path: "/usr/local/bin/redis-server"
+    redis-cli:
+      non_edmm_mrenclave: e0af02c211f8bf495dba034a75c6f7f5c030f045fc1d9b59ccd4c61e65278678
+      mrenclave: 8490a221b3d5b510e67ae05a4a7e3da938fb32f4a29fd2af3d2719313113e121
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 50009
+      isvsvn: 1
+      path: "/usr/local/bin/redis-cli"
+    redis-benchmark:
+      non_edmm_mrenclave: 9c74950fe8ef8d4b39ff1702ba3addacb869f4866d98266eb2f16bdafcd6fee4
+      mrenclave: 11eeffe3a2b0eefea4a0de38b9c4bf5bad8ecb624adffb146d5862501e9cad23
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 50010
+      isvsvn: 1
+      path: "/usr/local/bin/redis-benchmark"
+  "registry.scontain.com/scone.cloud/memcached-1-alpine:6.0.9":
+    memcached:
+      non_edmm_mrenclave: e36683ba8a3ab902bf82f68467a5b7cddaa86f9badf9d483f9f1f0d1942be435
+      mrenclave: 92e4ae79a4f6870bc2165366adb9227595b9074d54dccccfcd2d051a098086bd
+      mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+      isvprodid: 50011
+      isvsvn: 1
+      path: "/usr/local/bin/memcached"
+  "registry.scontain.com/scone.cloud/scone-deb-pkgs:6.0.9":
+    scone-cli_amd64.deb:
+      rust-cli:
+        non_edmm_mrenclave: 8b84c5cd75b7a4d2290a6a1bc5493eb76df29e919736976fbddb1e0c8316015d
+        mrenclave: 51c5b1f0c669c39c6dce436b8df759a4f45c8075b270f76353f6addfb052ad4c
+        mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+        isvprodid: 49300
+        isvsvn: 5
+        path: "/opt/scone/bin/rust-cli"
+  "registry.scontain.com/scone.cloud/scone-alpine-pkgs:6.0.9":
+    scone-cli.apk:
+      rust-cli:
+        non_edmm_mrenclave: 8b84c5cd75b7a4d2290a6a1bc5493eb76df29e919736976fbddb1e0c8316015d
+        mrenclave: 51c5b1f0c669c39c6dce436b8df759a4f45c8075b270f76353f6addfb052ad4c
+        mrsigner: 195e5a6df987d6a515dd083750c1ea352283f8364d3ec9142b0d593988c6ed2d
+        isvprodid: 49300
+        isvsvn: 5
+        path: "/opt/scone/bin/rust-cli"
